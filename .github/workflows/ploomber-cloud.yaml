@@ -1,0 +1,33 @@
+# based on https://docs.cloud.ploomber.io/en/latest/user-guide/github.html
+
+name: Ploomber Cloud
+
+on:
+  push:
+    branches:
+      # only deploy from the ploomber branch
+      - ploomber
+
+jobs:
+  deploy-to-ploomber-cloud:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ploomber-cloud hatch
+          mkdir -p ploomber/wheels
+          (hatch build && cp dist/*.whl ploomber/wheels)
+
+      - name: Deploy
+        env:
+          PLOOMBER_CLOUD_KEY: ${{ secrets.PLOOMBER_CLOUD_KEY }}
+        run: |
+          (cd ploomber && ploomber-cloud deploy)

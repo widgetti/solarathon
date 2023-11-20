@@ -1,0 +1,7 @@
+# developer specific ignores should go to ~/.gitignore like editor specific files
+.DS_Store
+__pycache__
+**/*.pyc
+dist/
+build/
+ploomber/wheels

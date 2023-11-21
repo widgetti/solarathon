@@ -22,6 +22,7 @@ $ solara run solarathon.pages
 
 
 ```
+$ pip install ploomber-cloud
 $ ploomber-cloud key YOURKEY
 $ (cd ploomber && rm ploomber-cloud.json && ploomber-cloud init)
 (add to git and commit)

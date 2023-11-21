@@ -27,7 +27,7 @@ $ (cd ploomber && rm ploomber-cloud.json && ploomber-cloud init)
 (add to git and commit)
 $ git add ploomber/ploomber-cloud.json
 $ git commit -m "ci: set ploomber id"
-$ git push origin master:ploomber
+$ git push origin master
 ```
 
 

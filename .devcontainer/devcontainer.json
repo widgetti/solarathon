@@ -1,0 +1,20 @@
+{
+    "name": "Solarthon Sports Video Analyse",
+    "build": { 
+        "dockerfile": "Dockerfile"
+    },
+
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-python.black-formatter"
+            ]
+        }
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/github-cli:1": {}
+    },
+  
+    "forwardPorts": [80]
+  }

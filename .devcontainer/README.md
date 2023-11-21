@@ -6,6 +6,9 @@ Code**, and **JetBrains IDEs**. The environment is installed with all the
 necessary dependencies for development and is ready for linting, formatting, and
 running tests.
 
+Please note that the solara server runs when the container starts - there is no need
+to run solara server manually.
+
 * **GitHub Codespaces**. Create a codespace for the repo by clicking
     the "Code" button on the main page of the repo, selecting the "Codespaces"
     tab, and clicking the "+". The configurations will automatically be used.

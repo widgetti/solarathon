@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import solara as sl
+import pandas as pd
 
 from PIL import Image
 
@@ -39,5 +40,8 @@ class VideoProcessor:
     model = None
     name = sl.reactive("")
 
-    processed_frames = {}
-    processed_data = {}
+    raw_frames = []
+    processed_frames = []
+    processed_data = []
+
+    active_frame = sl.reactive(np.zeros((10, 10)).astype(int))

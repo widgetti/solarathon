@@ -19,11 +19,11 @@ from typing import Optional
 import requests
 
 # some app state that outlives a single page
-init_app_state = solara.reactive(["ada", "btc","bnb", "eth","doge", "xrp"])
+init_app_state = solara.reactive(["ada", "btc","bnb", "eth","doge", "agix"])
 
 @solara.component
 def GeckoIcon (name: str, img: str):
-    with solara.v.Html(tag="a", attributes={"href": f"https://www.binance.com/", "target": "_blank"}):
+    with solara.v.Html(tag="a", attributes={"href": f"https://www.binance.com/en/trade", "target": "_blank"}):
         with solara.v.ListItem(class_="pa-0"):
             with solara.v.ListItemAvatar(color="grey darken-3"):
                 solara.v.Img(
@@ -49,7 +49,7 @@ def format_price(price):
     return formatted_price
 
 @solara.component
-def DashboardCard(symbol: str, price: str, procentChange: str, image_url: Optional[str] = None, market_cap: Optional[str] = None,  market_cap_change_percentage: Optional[str] = None, pending: Optional[bool] = False):
+def DashboardCard(price: str, procentChange: str, icon: solara.Element = None, market_cap: Optional[str] = None,  market_cap_change_percentage: Optional[str] = None, pending: Optional[bool] = False): 
     if pending:
              with solara.Card(
             GeckoIcon('', '')
@@ -70,15 +70,14 @@ def DashboardCard(symbol: str, price: str, procentChange: str, image_url: Option
                             solara.Text(str("price"), style={"font-size": "0.6rem"})
                             solara.Text('loading', style={"font-weight": 400})
                             solara.Text(str("market cap"), style={"font-size": "0.6rem"})
-                            solara.Text('loading', style={"color": processColor(procentChange), "font-weight": 500})
+                            solara.Text('loading', style={"font-weight": 500})
                             solara.Text(str("24h change price"), style={"font-size": "0.6rem"})
-                            solara.Text('loading', style={"color": processColor(procentChange), "font-weight": 500})
+                            solara.Text('loading', style={"font-weight": 500})
                             solara.Text(str("24h change market cap"), style={"font-size": "0.6rem"})
     else:
         with solara.Card(
-            GeckoIcon(symbol, image_url)
+            icon
             , style={"width":"330px", "min-width": "280px","max-width": "350px", "background-color": "#1B2028", "color": "#ffff", "border-radius": "16px", "padding": "20px", "box-shadow": "rgba(0, 0, 0, 0) 0px 0px, rgba(0, 0, 0, 0) 0px 0px, rgba(0, 0, 0, 0.2) 0px 4px 6px -1px, rgba(0, 0, 0, 0.14) 0px 2px 4px -1px"}, margin=0, classes=["my-2", "mx-auto",]):
-    
                 with solara.Div():
                     with solara.Div(
                         style={
@@ -136,6 +135,10 @@ def Page():
             font-size: 0.8rem;
             font-weight: 500;
         }
+
+        .v-card {
+            height: 100%;
+        }
         """
     )
 
@@ -150,11 +153,12 @@ def Page():
             data = response.json()              
 
             if coingecko_data_for_symbol:
-                set_loading(False)
-                DashboardCard(data['symbol'], data['lastPrice'], data['priceChangePercent'], coingecko_data_for_symbol['image'], coingecko_data_for_symbol['market_cap'], coingecko_data_for_symbol['market_cap_change_percentage_24h'], pending=loading)
+             set_loading(False)
+             DashboardCard(data['lastPrice'], data['priceChangePercent'], GeckoIcon(data['symbol'], coingecko_data_for_symbol['image']), coingecko_data_for_symbol['market_cap'], coingecko_data_for_symbol['market_cap_change_percentage_24h'], pending=loading)
             else:
-                print(f"Could not find image for {symbol}")
-                None
+                 set_loading(False)
+                 DashboardCard(data['lastPrice'], data['priceChangePercent'], data['symbol'], pending=loading)
+
      except Exception as e:
          print(f"An error occurred: {e}")
          solara.Error(f"Error {e}")

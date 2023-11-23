@@ -8,6 +8,11 @@ description = "Template project for Solarathon 2023"
 version = "0.0.1"
 dependencies = [
     "solara==1.23.0",
+    "Pillow==10.1.0",
+    "opencv-python==4.8.1.78",
+    "ultralytics==8.0.215",
+    "numpy==1.26.2",
+    "plotly==5.18.0"    
 ]
 
 [project.optional-dependencies]

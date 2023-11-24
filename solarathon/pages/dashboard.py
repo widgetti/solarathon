@@ -224,12 +224,12 @@ def Page():
                          GeckoIcon(binance_symbol, coingecko_data_for_symbol['image']),
                          coingecko_data_for_symbol['market_cap'],
                          coingecko_data_for_symbol['market_cap_change_percentage_24h'],
-                     )
+                     ).key(symbol)
                 else:
                     DashboardCard(
                         binance_symbol,
                         binance_symbol
-                    )
+                    ).key(symbol)
 
      
 def get_data_for_symbol(symbol, coingecko_list):

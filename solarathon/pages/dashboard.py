@@ -91,7 +91,7 @@ def DashboardCard(symbol: str, icon: solara.Element | str = None, market_cap: Op
     def fetch_data(event: threading.Event):
         while True:
             set_ticker_data(get_binance_ticket(symbol))
-            if event.wait(10):
+            if event.wait(5):
                 print(f"Stopping {symbol}")
                 return
 

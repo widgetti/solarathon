@@ -6,3 +6,4 @@ dist/
 build/
 ploomber/wheels
 data/private
+data/testing_*

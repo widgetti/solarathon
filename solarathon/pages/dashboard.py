@@ -19,7 +19,7 @@ from typing import Optional
 import requests
 
 # some app state that outlives a single page
-init_app_state = solara.reactive(["ada", "btc","bnb", "eth","doge", "agix"])
+init_app_state = solara.reactive(["ada", "btc","bnb", "eth","doge", "xrp"])
 
 @solara.component
 def GeckoIcon (name: str, img: str):
@@ -108,7 +108,7 @@ def Page():
     try:
         symbols_response = requests.get(symbols_url, verify=False)
         symbols_data = symbols_response.json()
-        available_symbols = sorted([symbol['baseAsset'].lower() for symbol in symbols_data['symbols']])
+        available_symbols = sorted(list(set([symbol['baseAsset'].lower() for symbol in symbols_data['symbols']])))
     except Exception as e:
         available_symbols = []
 
@@ -154,10 +154,10 @@ def Page():
 
             if coingecko_data_for_symbol:
              set_loading(False)
-             DashboardCard(data['lastPrice'], data['priceChangePercent'], GeckoIcon(data['symbol'], coingecko_data_for_symbol['image']), coingecko_data_for_symbol['market_cap'], coingecko_data_for_symbol['market_cap_change_percentage_24h'], pending=loading)
+             DashboardCard(data['lastPrice'], data['priceChangePercent'], GeckoIcon(data['symbol'], coingecko_data_for_symbol['image']), coingecko_data_for_symbol['market_cap'], coingecko_data_for_symbol['market_cap_change_percentage_24h'], loading)
             else:
                  set_loading(False)
-                 DashboardCard(data['lastPrice'], data['priceChangePercent'], data['symbol'], pending=loading)
+                 DashboardCard(data['lastPrice'], data['priceChangePercent'], data['symbol'], loading)
 
      except Exception as e:
          print(f"An error occurred: {e}")

@@ -30,13 +30,6 @@ import sys
 # some app state that outlives a single page
 from pydantic import BaseModel, Field
 
-symbols_url = "https://api.binance.com/api/v3/exchangeInfo"
-try:
-    symbols_response = requests.get(symbols_url)
-    symbols_data = symbols_response.json()
-    available_symbols = sorted(list(set([symbol['baseAsset'].lower() for symbol in symbols_data['symbols']])))
-except Exception as e:
-    available_symbols = []
 
 init_app_state = solara.reactive(["ada", "btc","bnb", "eth","doge", "xrp"])
 
@@ -149,10 +142,32 @@ def DashboardCard(symbol: str, icon: solara.Element | str = None, market_cap: Op
                             if market_cap_change_percentage is not None: solara.Text(str(market_cap_change_percentage) + "%", style={"color": processColor(ticker_data.price_change_percent), "font-weight": 500})
                             if market_cap_change_percentage is not None: solara.Text(str("24h change market cap"), style={"font-size": "0.6rem"})
 
+
+def get_available_symbols():
+    symbols_url = "https://api.binance.com/api/v3/exchangeInfo"
+    try:
+        symbols_response = requests.get(symbols_url)
+        symbols_data = symbols_response.json()
+        available_symbols = sorted(list(set([symbol['baseAsset'].lower() for symbol in symbols_data['symbols']])))
+    except Exception as e:
+        available_symbols = []
+
+    return available_symbols
+
+
 @solara.component
 def Page():
     default_currency = "USDT"
     default_echange = "Binance"
+
+    # Store in state and make sure it won't be refetched when
+    # component is rerendered.
+    available_symbols, _ = solara.use_state(
+        solara.use_memo(
+            get_available_symbols,
+            dependencies=[]
+        )
+    )
 
     all_tickers = list(init_app_state.value) + available_symbols
 

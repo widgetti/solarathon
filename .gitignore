@@ -7,3 +7,4 @@ build/
 ploomber/wheels
 data/private
 data/testing_*
+notebooks/2023-11-24 summarization testing.ipynb

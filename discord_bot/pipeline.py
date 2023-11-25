@@ -8,6 +8,8 @@ from haystack.document_stores import FAISSDocumentStore
 from haystack.nodes import PromptNode, PromptTemplate, AnswerParser
 from haystack.nodes import EmbeddingRetriever
 import logging
+from data_cleaning import save_to_json
+import json
 
 def create_timestamp():
     timestamp = datetime.now().strftime("%Y-%m-%d_%H%M")
@@ -151,4 +153,7 @@ output = run_summarization(
     retriever=None, 
     prompt_node=prompt_node, 
     use_retriever=False
+    )
+save_to_json(
+    json.loads(output['results'][0].strip()), description='llm_summary', path=data_path
     )

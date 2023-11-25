@@ -11,6 +11,44 @@ import logging
 from data_cleaning import save_to_json
 import json
 
+##### Update if needed #####
+
+data_path = '../data'
+data_filename = 'Discord_all_messages_cleaned.json'
+top_k = 100 # Number of documents to retrieve
+max_length = 3000
+
+system_message = """
+The following is a JSON array of objects containing a sequence of Discord messages. 
+The messages have the following attributes:
+- id: The ID of the message.
+- author_id: The ID of the message write.
+- content: The content of the message.
+- reference_id: The ID of the parent message. If the message is not a reply, this will be null.
+    Otherwise, this value indicates that the message is a reply to the message with the specified ID.
+
+Summarize the messages to create a Frequently Asked Questions document. Return the output as a JSON array 
+where each element is a question-answer pair. For example:
+[
+    {
+        "question": "Question 1",
+        "answer": "Answer 1"
+    },
+    {
+        "question": "Question 2",
+        "answer": "Answer 2"
+    }
+]
+"""
+
+##### Update if needed #####
+embedding_model = 'sentence-transformers/all-mpnet-base-v2' # https://huggingface.co/sentence-transformers/all-mpnet-base-v2
+llm = 'gpt-3.5-turbo-16k'
+###########################
+
+
+
+
 def create_timestamp():
     timestamp = datetime.now().strftime("%Y-%m-%d_%H%M")
     print(f'Created timestamp string: {timestamp}')
@@ -32,18 +70,6 @@ def delete_documents(filename, filepath):
 
 logging.basicConfig(format="%(levelname)s - %(name)s -  %(message)s", level=logging.WARNING)
 logging.getLogger("haystack").setLevel(logging.INFO)
-
-##### Update if needed #####
-data_path = '../data'
-data_filename = 'Discord_all_messages_cleaned.json'
-top_k = 100 # Number of documents to retrieve
-
-##### Update if needed #####
-embedding_model = 'sentence-transformers/all-mpnet-base-v2' # https://huggingface.co/sentence-transformers/all-mpnet-base-v2
-llm = 'gpt-3.5-turbo-16k'
-###########################
-
-
 
 openai_api_key = os.getenv('openai_api_key')
 file_converter = TextConverter() # https://docs.haystack.deepset.ai/docs/file_converters
@@ -95,29 +121,6 @@ document_store.update_embeddings(retriever)
 document_store.save(index_path=f'{data_path}/{index_filename}', config_path=f'{data_path}/{config_filename}')
 
 model_name = llm
-max_length = 3000
-system_message = """
-The following is a JSON array of objects containing a sequence of Discord messages. 
-The messages have the following attributes:
-- id: The ID of the message.
-- author_id: The ID of the message write.
-- content: The content of the message.
-- reference_id: The ID of the parent message. If the message is not a reply, this will be null.
-    Otherwise, this value indicates that the message is a reply to the message with the specified ID.
-
-Summarize the messages to create a Frequently Asked Questions document. Return the output as a JSON array 
-where each element is a question-answer pair. For example:
-[
-    {
-        "question": "Question 1",
-        "answer": "Answer 1"
-    },
-    {
-        "question": "Question 2",
-        "answer": "Answer 2"
-    }
-]
-"""
 prompt = PromptTemplate( # https://docs.haystack.deepset.ai/docs/prompt_node#prompttemplates
     prompt='{query}\n\n Messages: {join(documents)} \n\nSummary: '
 )

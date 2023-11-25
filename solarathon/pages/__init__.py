@@ -28,6 +28,9 @@ def Page():
             solara.Success("Great short writing!")
 
         solara.Markdown("*First exercise*: remove this text and write your own sentence.")
+        solara.Markdown(f"""`Food`       
+        [Briyani](https://en.wikipedia.org/wiki/Biryani)""")
+
 
 
 @solara.component

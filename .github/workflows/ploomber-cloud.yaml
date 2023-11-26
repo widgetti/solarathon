@@ -39,5 +39,5 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           export OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}"
-          python solarathon-faq-creator/solarathon/pages/__init__.py
+          python solarathon/pages/__init__.py
         

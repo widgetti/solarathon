@@ -9,6 +9,9 @@ word_limit = solara.reactive(10)
 # in case you want to override the default order of the tabs
 route_order = ["/", "settings", "chat", "clickbutton"]
 
+import os
+openai_api_key = os.getenv("OPENAI_API_KEY")
+
 @solara.component
 def Page():
     with solara.Column(style={"padding-top": "30px"}):
@@ -26,7 +29,7 @@ def Page():
             solara.Warning(f"With {word_count} words, you are close to the word limit of {word_limit.value}.")
         else:
             solara.Success("Great short writing!")
-
+        solara.Markdown(openai_api_key)
         solara.Markdown("*First exercise*: remove this text and write your own sentence.")
         solara.Markdown(f"""`Food`       
         [Biriyani](https://en.wikipedia.org/wiki/Biryani)""")

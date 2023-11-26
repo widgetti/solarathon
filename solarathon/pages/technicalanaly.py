@@ -65,13 +65,11 @@ def plotTA(ticker, days_range, returns, volume, bbanduplow, bbandmidd, ema10, em
     style = mpf.make_mpf_style(base_mpf_style='yahoo', marketcolors=mpf.make_marketcolors(up='g', down='r'))
 
     # Create a subplot to display the candlestick chart and add indicators
-    fig, axes = mpf.plot(df, volume=volume.value, type='candle', style=style, title=f'Candlestick and TA - {crypto.value}', 
+    fig, axes = mpf.plot(df, volume=volume.value, type='candle', style=style, title=f'Candlestick and TA - {ticker}', 
                         ylabel='Price', addplot=addplots, figsize=(12, 8), returnfig=True)
     
-    # Show the plot
-    mpf.show()
-    
-    return message
+  
+    return fig, message
 
 # Technical analysis, feature selection state initialization
 bbanduplow = solara.reactive(True)
@@ -112,7 +110,8 @@ def Page():
     # pbar = solara.ProgressLinear(True)
     
     # main function to plot technical indicator, input the component values
-    message = plotTA(crypto.value, days_range.value, returns, volume, bbanduplow, bbandmidd, ema10, ema30)
+    fig, message = plotTA(crypto.value, days_range.value, returns, volume, bbanduplow, bbandmidd, ema10, ema30)
+    solara.FigureMatplotlib(fig)
     
     #pbar = solara.ProgressLinear(False)
 

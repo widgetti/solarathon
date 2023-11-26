@@ -35,9 +35,9 @@ jobs:
 
           
       - name: Run Ploomber Deployment Script
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           export OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}"
           python solarathon/pages/__init__.py
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-
+        

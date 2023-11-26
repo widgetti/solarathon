@@ -10,6 +10,7 @@ word_limit = solara.reactive(10)
 route_order = ["/", "settings", "chat", "clickbutton"]
 
 import os
+openai_api_key = solara.reactive("")
 openai_api_key.value = os.getenv("OPENAI_API_KEY")
 
 @solara.component

@@ -31,3 +31,12 @@ jobs:
           PLOOMBER_CLOUD_KEY: ${{ secrets.PLOOMBER_CLOUD_KEY }}
         run: |
           (cd ploomber && ploomber-cloud deploy)
+
+          
+      - name: Run Ploomber Deployment Script
+        run: |
+          export OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}"
+          python __init__.py
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+

@@ -13,13 +13,33 @@ TODO:
 #responsiveness
 #refactor
 """
+import threading
+from threading import Event
+from time import sleep
 
 import solara
-from typing import Optional
+from typing import Optional, cast
 import requests
 
+import logging
+import sys
+from typing import Union
+
+# root = logging.getLogger()
+# root.setLevel(logging.DEBUG)
+
 # some app state that outlives a single page
+from pydantic import BaseModel, Field
+
+
 init_app_state = solara.reactive(["ada", "btc","bnb", "eth","doge", "xrp"])
+
+
+class TickerData(BaseModel):
+    symbol: str
+    last_price: float = Field(..., alias="lastPrice")
+    price_change_percent: float = Field(..., alias="priceChangePercent")
+
 
 @solara.component
 def GeckoIcon (name: str, img: str):
@@ -34,7 +54,7 @@ def GeckoIcon (name: str, img: str):
                 solara.v.ListItemTitle(children=[name], class_="v-list-item__title_avatar")
 
 def processColor(procentChange):
-    if procentChange.startswith("-"):
+    if procentChange < 0:
         return "red"
     else:
         return "green"
@@ -48,13 +68,40 @@ def format_price(price):
     formatted_price = '{:,.0f}'.format(float(price)).replace(',', ' ')
     return formatted_price
 
+
+def get_binance_ticket(symbol: str) -> TickerData:
+    binance_url = f"https://api.binance.com/api/v3/ticker/24hr?symbol={symbol}"
+    return TickerData.model_validate_json(
+        json_data=requests.get(binance_url).content
+    )
+
+
 @solara.component
-def DashboardCard(price: str, procentChange: str, icon: solara.Element = None, market_cap: Optional[str] = None,  market_cap_change_percentage: Optional[str] = None, pending: Optional[bool] = False): 
-    if pending:
-             with solara.Card(
-            GeckoIcon('', '')
-            , style={"width":"330px", "min-width": "280px","max-width": "350px", "background-color": "#1B2028", "color": "#ffff", "border-radius": "16px", "padding": "20px", "box-shadow": "rgba(0, 0, 0, 0) 0px 0px, rgba(0, 0, 0, 0) 0px 0px, rgba(0, 0, 0, 0.2) 0px 4px 6px -1px, rgba(0, 0, 0, 0.14) 0px 2px 4px -1px"}, margin=0, classes=["my-2", "mx-auto",]):
-    
+def DashboardCard(symbol: str, icon: Union[solara.Element, str] = None, market_cap: Optional[str] = None,  market_cap_change_percentage: Optional[str] = None, pending: Optional[bool] = False):
+    ticker_data, set_ticker_data = solara.use_state(
+        cast(Optional[TickerData], None)
+    )
+
+    def fetch_data(event: threading.Event):
+        while True:
+            set_ticker_data(get_binance_ticket(symbol))
+            if event.wait(5):
+                print(f"Stopping {symbol}")
+                return
+
+    # run the render loop in a separate thread
+    result: solara.Result[bool] = solara.use_thread(
+        fetch_data,
+        intrusive_cancel=False
+    )
+    if result.error:
+        raise result.error
+
+    if not ticker_data:
+        with solara.Card(
+            GeckoIcon('', ''),
+                style={"width":"330px", "min-width": "280px","max-width": "350px", "background-color": "#1B2028", "color": "#ffff", "border-radius": "16px", "padding": "20px", "box-shadow": "rgba(0, 0, 0, 0) 0px 0px, rgba(0, 0, 0, 0) 0px 0px, rgba(0, 0, 0, 0.2) 0px 4px 6px -1px, rgba(0, 0, 0, 0.14) 0px 2px 4px -1px"}, margin=0, classes=["my-2", "mx-auto",]):
+
                 with solara.Div():
                     with solara.Div(
                         style={
@@ -87,30 +134,41 @@ def DashboardCard(price: str, procentChange: str, icon: solara.Element = None, m
                     },
                 ):
                         with solara.GridFixed(columns=2, justify_items="space-between", align_items="baseline"):
-                            solara.Text(str(f"{decimals(price)}$"), style={"font-size": "1.5rem", "font-weight": 500})
+                            solara.Text(str(f"{decimals(ticker_data.last_price)}$"), style={"font-size": "1.5rem", "font-weight": 500})
                             solara.Text(str("price"), style={"font-size": "0.6rem"})
                             if market_cap is not None: solara.Text(str(f"{format_price(decimals(market_cap))}$"), style={"font-weight": 400})
                             if market_cap is not None:  solara.Text(str("market cap"), style={"font-size": "0.6rem"})
-                            solara.Text(str(procentChange + "%"), style={"color": processColor(procentChange), "font-weight": 500})
+                            solara.Text(f"{ticker_data.price_change_percent}%", style={"color": processColor(ticker_data.price_change_percent), "font-weight": 500})
                             solara.Text(str("24h change price"), style={"font-size": "0.6rem"})
-                            if market_cap_change_percentage is not None: solara.Text(str(market_cap_change_percentage) + "%", style={"color": processColor(procentChange), "font-weight": 500})
+                            if market_cap_change_percentage is not None: solara.Text(str(market_cap_change_percentage) + "%", style={"color": processColor(ticker_data.price_change_percent), "font-weight": 500})
                             if market_cap_change_percentage is not None: solara.Text(str("24h change market cap"), style={"font-size": "0.6rem"})
 
-@solara.component
-def Page():
-    loading, set_loading = solara.use_state(True)
-    default_currency = "USDT"
-    default_echange = "Binance"
-    symbols_url = "https://api.binance.com/api/v3/exchangeInfo"
-    coingecko_json_url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc"
-    binance_url = "https://api.binance.com/api/v3/ticker/24hr?symbol="
 
+def get_available_symbols():
+    symbols_url = "https://api.binance.com/api/v3/exchangeInfo"
     try:
-        symbols_response = requests.get(symbols_url, verify=False)
+        symbols_response = requests.get(symbols_url)
         symbols_data = symbols_response.json()
         available_symbols = sorted(list(set([symbol['baseAsset'].lower() for symbol in symbols_data['symbols']])))
     except Exception as e:
         available_symbols = []
+
+    return available_symbols
+
+
+@solara.component
+def Page():
+    default_currency = "USDT"
+    default_echange = "Binance"
+
+    # Store in state and make sure it won't be refetched when
+    # component is rerendered.
+    available_symbols, _ = solara.use_state(
+        solara.use_memo(
+            get_available_symbols,
+            dependencies=[]
+        )
+    )
 
     all_tickers = list(init_app_state.value) + available_symbols
 
@@ -143,25 +201,52 @@ def Page():
     )
 
     with solara.GridFixed(columns=3, align_items="end", justify_items="stretch"):
-     try:
-          coingecko_response = requests.get(coingecko_json_url, verify=False)
-          coingecko_data = coingecko_response.json()
-          for symbol in init_app_state.value:
-            coingecko_data_for_symbol = get_data_for_symbol(symbol, coingecko_data)
-            json_url = f"{binance_url}{symbol.upper()}{default_currency}"
-            response = requests.get(json_url, verify=False)
-            data = response.json()              
+        def get_coingecko_data():
+            coingecko_json_url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc"
 
-            if coingecko_data_for_symbol:
-             set_loading(False)
-             DashboardCard(data['lastPrice'], data['priceChangePercent'], GeckoIcon(data['symbol'], coingecko_data_for_symbol['image']), coingecko_data_for_symbol['market_cap'], coingecko_data_for_symbol['market_cap_change_percentage_24h'], loading)
-            else:
-                 set_loading(False)
-                 DashboardCard(data['lastPrice'], data['priceChangePercent'], data['symbol'], loading)
+            coingecko_response = requests.get(coingecko_json_url)
+            return coingecko_response.json()
 
-     except Exception as e:
-         print(f"An error occurred: {e}")
-         solara.Error(f"Error {e}")
+        coingecko_data, set_coingecko_data = solara.use_state(cast(Optional[dict], None))
+
+        def fetch_data(should_stop: Event):
+            while True:
+                set_coingecko_data(get_coingecko_data())
+                if should_stop.wait(30):
+                    return
+
+        # run the render loop in a separate thread
+        result: solara.Result[bool] = solara.use_thread(
+            fetch_data,
+            intrusive_cancel=False
+        )
+        if result.error:
+            raise result.error
+
+        if not coingecko_data:
+            return
+
+        if 'status' in coingecko_data:
+            solara.Error(f"Failed to retrieve data: {coingecko_data}")
+        else:
+            for symbol in init_app_state.value:
+                coingecko_data_for_symbol = get_data_for_symbol(symbol, coingecko_data)
+
+                binance_symbol = symbol.upper() + default_currency
+
+                if coingecko_data_for_symbol:
+                    DashboardCard(
+                         binance_symbol,
+                         GeckoIcon(binance_symbol, coingecko_data_for_symbol['image']),
+                         coingecko_data_for_symbol['market_cap'],
+                         coingecko_data_for_symbol['market_cap_change_percentage_24h'],
+                     ).key(symbol)
+                else:
+                    DashboardCard(
+                        binance_symbol,
+                        binance_symbol
+                    ).key(symbol)
+
      
 def get_data_for_symbol(symbol, coingecko_list):
     for coin in coingecko_list:

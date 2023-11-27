@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+import os
 def load_json(filename, filepath):
     """
     Load a JSON file using specified file path.
@@ -66,10 +67,10 @@ def load_json(filename, filepath):
     with open(filename) as file:
         return json.load(file)
 
-
+DISCORD_SERVER_ID = os.getenv('DISCORD_SERVER_ID')
 
 filepath = '../data' #### Update if needed
-filename_raw = 'Discord_all_messages_raw.json' #### Update if needed
+filename_raw = f'{DISCORD_SERVER_ID}_selected_channels_messages.json' #### Update if needed
 filename_cleaned = 'Discord_all_messages_cleaned'
 messages = load_json(filename_raw, filepath)
 filtered_messages = filter_messages(messages)

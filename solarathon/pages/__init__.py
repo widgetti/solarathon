@@ -10,8 +10,8 @@ word_limit = solara.reactive(10)
 route_order = ["/", "settings", "chat", "clickbutton"]
 
 import os
-openai_api_key = solara.reactive("")
-openai_api_key.value = os.getenv("OPENAI_API_KEY")
+openai_api_var = solara.reactive("")
+openai_api_var.value = os.getenv("OPENAI_API_KEY")
 
 @solara.component
 def Page():
@@ -30,7 +30,7 @@ def Page():
             solara.Warning(f"With {word_count} words, you are close to the word limit of {word_limit.value}.")
         else:
             solara.Success("Great short writing!")
-        solara.Markdown(f"openai key {openai_api_key.value}")
+        solara.Markdown(f"openai key {openai_api_var.value}")
         solara.Markdown("*First exercise*: remove this text and write your own sentence.")
         solara.Markdown(f"""`Food`       
         [Biriyani](https://en.wikipedia.org/wiki/Biryani)""")

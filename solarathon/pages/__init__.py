@@ -30,8 +30,9 @@ def Page():
             solara.Warning(f"With {word_count} words, you are close to the word limit of {word_limit.value}.")
         else:
             solara.Success("Great short writing!")
+        
         solara.Markdown(f"openai key {cat}")
-        solara.Markdown(f"openai key {cat.value}")
+        #solara.Markdown(f"openai key {cat.value}")
         solara.Markdown("*First exercise*: remove this text and write your own sentence.")
         solara.Markdown(f"""`Food`       
         [Biriyani](https://en.wikipedia.org/wiki/Biryani)""")

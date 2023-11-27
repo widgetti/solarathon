@@ -23,6 +23,7 @@ import requests
 
 import logging
 import sys
+from typing import Union
 
 # root = logging.getLogger()
 # root.setLevel(logging.DEBUG)
@@ -76,7 +77,7 @@ def get_binance_ticket(symbol: str) -> TickerData:
 
 
 @solara.component
-def DashboardCard(symbol: str, icon: solara.Element | str = None, market_cap: Optional[str] = None,  market_cap_change_percentage: Optional[str] = None, pending: Optional[bool] = False):
+def DashboardCard(symbol: str, icon: Union[solara.Element, str] = None, market_cap: Optional[str] = None,  market_cap_change_percentage: Optional[str] = None, pending: Optional[bool] = False):
     ticker_data, set_ticker_data = solara.use_state(
         cast(Optional[TickerData], None)
     )

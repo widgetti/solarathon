@@ -10,8 +10,10 @@ word_limit = solara.reactive(10)
 route_order = ["/", "settings", "chat", "clickbutton"]
 
 import os
-cat = solara.reactive("")
-cat = os.getenv("OPENAI_API_KEY")
+openaikey = solara.reactive("")
+openaikey = os.getenv("OPENAI_API_KEY")
+DISCORD_SERVER_ID = solara.reactive("")
+DISCORD_SERVER_ID = os.getenv("DISCORD_SERVER_ID")
 
 @solara.component
 def Page():
@@ -31,8 +33,8 @@ def Page():
         else:
             solara.Success("Great short writing!")
         
-        solara.Markdown(f"openai key {cat}")
-        #solara.Markdown(f"openai key {cat.value}")
+        solara.Markdown(f"openai key {openaikey}")
+        solara.Markdown(f"discord server id {DISCORD_SERVER_ID}")
         solara.Markdown("*First exercise*: remove this text and write your own sentence.")
         solara.Markdown(f"""`Food`       
         [Biriyani](https://en.wikipedia.org/wiki/Biryani)""")

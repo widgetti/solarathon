@@ -81,13 +81,13 @@ class FAQCreatorBotClient(discord.Client):
                     } 
                    for m in messages])
 
-        with open(f'data/private/{DISCORD_SERVER_ID}_selected_channels_messages.json', 'w') as f:
+        with open(f'data/{DISCORD_SERVER_ID}_selected_channels_messages.json', 'w') as f:
             json.dump(all_messages, f)
         return all_messages
 
 def run_client(channel_filter_list : list[int] = []):
     
-    if not Path(f'data/private/{DISCORD_SERVER_ID}_selected_channels_messages.json').exists():    
+    if not Path(f'data/{DISCORD_SERVER_ID}_selected_channels_messages.json').exists():    
         intents = discord.Intents.default()
         intents.message_content = True
         client = FAQCreatorBotClient(intents=intents, channel_filter_list = channel_filter_list)
@@ -101,6 +101,6 @@ def run_client(channel_filter_list : list[int] = []):
 #* Parameters:
 #*  - channel_filter_list : Channel ID ( 1106593686223069309 is the "general" channel of the Solara Discord Server)
 
-# run_client(channel_filter_list = [
-#     1106593686223069309
-# ])
+run_client(channel_filter_list = [
+    1106593686223069309
+])

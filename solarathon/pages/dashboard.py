@@ -72,7 +72,7 @@ def format_price(price):
 
 
 def get_binance_ticket(symbol: str) -> TickerData:
-    binance_url = f"https://api.binance.com/api/v3/ticker/24hr?symbol={symbol}"
+    binance_url = f"https://api.binance.us/api/v3/ticker/24hr?symbol={symbol}"
     return TickerData.model_validate_json(
         json_data=requests.get(binance_url).content
     )
@@ -151,7 +151,7 @@ def DashboardCard(symbol: str, icon: Union[solara.Element, str] = None, market_c
 
 
 def get_available_symbols():
-    symbols_url = "https://api.binance.com/api/v3/exchangeInfo"
+    symbols_url = "https://api.binance.us/api/v3/exchangeInfo"
     try:
         symbols_response = requests.get(symbols_url)
         symbols_data = symbols_response.json()

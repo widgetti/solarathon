@@ -1,5 +1,4 @@
 # based on https://docs.cloud.ploomber.io/en/latest/user-guide/github.html
-
 name: Ploomber Cloud
 
 on:
@@ -19,46 +18,19 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Initial Ingestion - Fetch message
-        run: |
-          python -m pip install --upgrade pip
-          pip install discord.py
-          python backend/discord/get_messages.py
-          
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install ploomber-cloud hatch
-          pip install solara pytextrank pandas yake
           mkdir -p ploomber/wheels
           (hatch build && cp dist/*.whl ploomber/wheels)
+          tree .
 
       - name: Deploy
         env:
           PLOOMBER_CLOUD_KEY: ${{ secrets.PLOOMBER_CLOUD_KEY }}
         run: |
           (cd ploomber && ploomber-cloud deploy)
-
-          
-      - name: Run Ploomber Deployment Script
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          export OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}"
-          python solarathon/pages/__init__.py
-      
-      - name: Move File
-        run: |
-          # Replace "source_folder" and "destination_folder" with your actual folder names
-          mv data/testing/journal_article.txt solarathon/
-
-      - name: Commit and Push Changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config -l
-          git add .
-          git commit -m "Move file from source_folder to destination_folder"
-          git push
 
           
       

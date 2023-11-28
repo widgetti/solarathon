@@ -1,4 +1,6 @@
 import solara
+from pathlib import Path
+import json
 
 # Declare reactive variables at the top level. Components using these variables
 # will be re-executed when their values change.
@@ -39,7 +41,10 @@ def Page():
         solara.Markdown(f"""`Food`       
         [Biriyani](https://en.wikipedia.org/wiki/Biryani)""")
 
-
+        raw_data = Path(__file__).parent.parent
+        with open(raw_data / 'assets' / 'data' / 'haystack.json' , 'r' ) as f:
+            raw = json.loads(f.read())
+        solara.Markdown(f'{raw}')
 
 @solara.component
 def Layout(children):

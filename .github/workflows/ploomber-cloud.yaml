@@ -48,16 +48,4 @@ jobs:
           python solarathon/pages/__init__.py
           
           
-      - name: Move File
-        run: |
-          # Replace "source_folder" and "destination_folder" with your actual folder names
-          mv data/testing/journal_article.txt solarathon/
-
-      - name: Commit and Push Changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config -l
-          git add .
-          git commit -m "Move file from source_folder to destination_folder"
-          git push
-
+      

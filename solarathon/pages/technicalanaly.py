@@ -5,9 +5,10 @@ import mplfinance as mpf
 import pandas_ta as ta
 from datetime import date, timedelta
 
-# todo: 
+# TODO: 
 # add progress bar
-# improve the performance plot
+# improve the performance 
+# refactoring
 
 # plot definition
 def plotTA(ticker, days_range, returns, volume, bbanduplow, bbandmidd, ema10, ema30):
@@ -25,12 +26,13 @@ def plotTA(ticker, days_range, returns, volume, bbanduplow, bbandmidd, ema10, em
 
     except Exception as e:
         # Handle the exception and return the error
-        return e
+        fig = mpf.plot(ta.DataFrame(), type='candle', style='yahoo', title='Empty Plot')
+        return fig, e
 
     # Create a list to store plot configurations
     addplots = []
 
-    # check the alternatives plots has been selected and add the plot to the list
+    # check the alternatives that has been selected, and add the plot to the list
     if (ema10.value):
         # calculate EMA10
         df['EMA10'] = ta.ema(df['Adj Close'], length=10)
@@ -107,14 +109,10 @@ def Page():
         solara.Switch(label="EMA10", value=ema10)
         solara.Switch(label="EMA30", value=ema30)
 
-    # pbar = solara.ProgressLinear(True)
-    
     # main function to plot technical indicator, input the component values
     fig, message = plotTA(crypto.value, days_range.value, returns, volume, bbanduplow, bbandmidd, ema10, ema30)
     solara.FigureMatplotlib(fig)
     
-    #pbar = solara.ProgressLinear(False)
-
     # Status message for crypto selection
     if message == "Download_successful":
         solara.Success(f"Asset selected: {crypto} {message}", text=True, dense=True, outlined=True, icon=True)

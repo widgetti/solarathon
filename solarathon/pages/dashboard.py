@@ -10,14 +10,14 @@ Basically a personalized crypto information dashboard
 TODO:
 #can be added setting for init basket of tickers
 #default_currency can be taken from key qoteAsset from api/v3/exchangeInfo
-#responsiveness
-#refactor
 """
 import threading
 from threading import Event
 from time import sleep
 
 import solara
+from solara.alias import rv
+
 from typing import Optional, cast
 import requests
 
@@ -39,19 +39,21 @@ class TickerData(BaseModel):
     symbol: str
     last_price: float = Field(..., alias="lastPrice")
     price_change_percent: float = Field(..., alias="priceChangePercent")
+    high_price: float= Field(..., alias="highPrice")
+    low_price: float = Field(..., alias="lowPrice")
 
 
 @solara.component
 def GeckoIcon (name: str, img: str):
     with solara.v.Html(tag="a", attributes={"href": f"https://www.binance.com/en/trade", "target": "_blank"}):
         with solara.v.ListItem(class_="pa-0"):
-            with solara.v.ListItemAvatar(color="grey darken-3"):
+            with solara.v.ListItemAvatar(color="white"):
                 solara.v.Img(
                     class_="elevation-6",
                     src=img,
                 )
             with solara.v.ListItemContent():
-                solara.v.ListItemTitle(children=[name], class_="v-list-item__title_avatar")
+                solara.v.ListItemTitle(children=[name], style_=f"color: white")
 
 def processColor(procentChange):
     if procentChange < 0:
@@ -98,10 +100,8 @@ def DashboardCard(symbol: str, icon: Union[solara.Element, str] = None, market_c
         raise result.error
 
     if not ticker_data:
-        with solara.Card(
-            GeckoIcon('', ''),
-                style={"width":"330px", "min-width": "280px","max-width": "350px", "background-color": "#1B2028", "color": "#ffff", "border-radius": "16px", "padding": "20px", "box-shadow": "rgba(0, 0, 0, 0) 0px 0px, rgba(0, 0, 0, 0) 0px 0px, rgba(0, 0, 0, 0.2) 0px 4px 6px -1px, rgba(0, 0, 0, 0.14) 0px 2px 4px -1px"}, margin=0, classes=["my-2", "mx-auto",]):
-
+              with rv.Card(style_=f"width: 100%; height: 100%; font-family: sans-serif; padding: 20px 20px; background-color: #1B2028; color: #ffff; border-radius: 16px; box-shadow: rgba(0, 0, 0, 0) 0px 0px, rgba(0, 0, 0, 0) 0px 0px, rgba(0, 0, 0, 0.2) 0px 4px 6px -1px, rgba(0, 0, 0, 0.14) 0px 2px 4px -1px") as main:
+                rv.CardTitle(children=[GeckoIcon('', '')], style_="padding: 0px 0px; padding-bottom: 5px;")
                 with solara.Div():
                     with solara.Div(
                         style={
@@ -121,12 +121,11 @@ def DashboardCard(symbol: str, icon: Union[solara.Element, str] = None, market_c
                             solara.Text(str("24h change price"), style={"font-size": "0.6rem"})
                             solara.Text('loading', style={"font-weight": 500})
                             solara.Text(str("24h change market cap"), style={"font-size": "0.6rem"})
+                return main
     else:
-        with solara.Card(
-            icon
-            , style={"width":"330px", "min-width": "280px","max-width": "350px", "background-color": "#1B2028", "color": "#ffff", "border-radius": "16px", "padding": "20px", "box-shadow": "rgba(0, 0, 0, 0) 0px 0px, rgba(0, 0, 0, 0) 0px 0px, rgba(0, 0, 0, 0.2) 0px 4px 6px -1px, rgba(0, 0, 0, 0.14) 0px 2px 4px -1px"}, margin=0, classes=["my-2", "mx-auto",]):
-                with solara.Div():
-                    with solara.Div(
+        with rv.Card(style_=f"width: 100%; height: 100%; font-family: sans-serif; padding: 20px 20px; background-color: #1B2028; color: #ffff; border-radius: 16px; box-shadow: rgba(0, 0, 0, 0) 0px 0px, rgba(0, 0, 0, 0) 0px 0px, rgba(0, 0, 0, 0.2) 0px 4px 6px -1px, rgba(0, 0, 0, 0.14) 0px 2px 4px -1px") as main:
+            rv.CardTitle(children=[icon], style_="padding: 0px 0px; padding-bottom: 5px;")
+            with solara.Div(
                         style={
                         "display": "inline",
                         "color": "white",
@@ -134,7 +133,7 @@ def DashboardCard(symbol: str, icon: Union[solara.Element, str] = None, market_c
                     },
                 ):
                         with solara.GridFixed(columns=2, justify_items="space-between", align_items="baseline"):
-                            solara.Text(str(f"{decimals(ticker_data.last_price)}$"), style={"font-size": "1.5rem", "font-weight": 500})
+                            solara.Text(str(f"{decimals(ticker_data.last_price)}$"), style={"font-size": "1.5rem", "font-weight": 700})
                             solara.Text(str("price"), style={"font-size": "0.6rem"})
                             if market_cap is not None: solara.Text(str(f"{format_price(decimals(market_cap))}$"), style={"font-weight": 400})
                             if market_cap is not None:  solara.Text(str("market cap"), style={"font-size": "0.6rem"})
@@ -142,6 +141,13 @@ def DashboardCard(symbol: str, icon: Union[solara.Element, str] = None, market_c
                             solara.Text(str("24h change price"), style={"font-size": "0.6rem"})
                             if market_cap_change_percentage is not None: solara.Text(str(market_cap_change_percentage) + "%", style={"color": processColor(ticker_data.price_change_percent), "font-weight": 500})
                             if market_cap_change_percentage is not None: solara.Text(str("24h change market cap"), style={"font-size": "0.6rem"})
+                             
+                            if market_cap_change_percentage is None: solara.Text(str(f"{ticker_data.high_price}$"), style={"font-size": "0.6rem"})
+                            if market_cap_change_percentage is None: solara.Text("Height", style={"font-size": "0.6rem"})
+                            if market_cap_change_percentage is None: solara.Text(str(f"{ticker_data.low_price}$"), style={"font-size": "0.6rem"})
+                            if market_cap_change_percentage is None: solara.Text("Low", style={"font-size": "0.6rem"})
+
+        return main
 
 
 def get_available_symbols():
@@ -160,6 +166,12 @@ def get_available_symbols():
 def Page():
     default_currency = "USDT"
     default_echange = "Binance"
+    grid_layout_initial = [
+        {"h": 6, "i": "0", "moved": False, "w": 3, "x": 0, "y": 0},
+        {"h": 6, "i": "1", "moved": False, "w": 5, "x": 3, "y": 0},
+        {"h": 6, "i": "2", "moved": False, "w": 4, "x": 8, "y": 0},
+    ]
+    grid_layout, set_grid_layout = solara.use_state(grid_layout_initial)
 
     # Store in state and make sure it won't be refetched when
     # component is rerendered.
@@ -172,13 +184,8 @@ def Page():
 
     all_tickers = list(init_app_state.value) + available_symbols
 
-    solara.SelectMultiple(f"Tickers from {default_echange}", init_app_state, all_tickers)
-
     solara.Style(
         """
-        .v-list-item__title_avatar {
-          color: white !important;
-        }
 
         .v-list-item__content {
             color: #1B2028;
@@ -199,8 +206,13 @@ def Page():
         }
         """
     )
+        
+    with solara.VBox() as main:
+        solara.SelectMultiple(f"Tickers from {default_echange}", init_app_state, all_tickers)
 
-    with solara.GridFixed(columns=3, align_items="end", justify_items="stretch"):
+        dashboard_cards = []
+        row_widths = [3, 5, 4]
+
         def get_coingecko_data():
             coingecko_json_url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc"
 
@@ -229,23 +241,38 @@ def Page():
         if 'status' in coingecko_data:
             solara.Error(f"Failed to retrieve data: {coingecko_data}")
         else:
-            for symbol in init_app_state.value:
+            for i, symbol in enumerate(init_app_state.value):
                 coingecko_data_for_symbol = get_data_for_symbol(symbol, coingecko_data)
 
                 binance_symbol = symbol.upper() + default_currency
 
                 if coingecko_data_for_symbol:
-                    DashboardCard(
-                         binance_symbol,
-                         GeckoIcon(binance_symbol, coingecko_data_for_symbol['image']),
-                         coingecko_data_for_symbol['market_cap'],
-                         coingecko_data_for_symbol['market_cap_change_percentage_24h'],
-                     ).key(symbol)
+                    card = DashboardCard(
+                            binance_symbol,
+                            GeckoIcon(binance_symbol, coingecko_data_for_symbol['image']),
+                            coingecko_data_for_symbol['market_cap'],
+                            coingecko_data_for_symbol['market_cap_change_percentage_24h'],
+                        ).key(symbol)
+                    dashboard_cards.append(card)
+
                 else:
-                    DashboardCard(
+                    card = DashboardCard(
                         binance_symbol,
                         binance_symbol
                     ).key(symbol)
+                    dashboard_cards.append(card)
+
+        grid_layout_dyn = [
+            {"h": 6, "i": str(i), "moved": False, "w": row_widths[i % len(row_widths)], "x": sum(row_widths[:i % len(row_widths)]), "y": (i // len(row_widths)) * 6}
+            for i in range(len(init_app_state.value))
+        ]
+
+        len(dashboard_cards)<= 0 and solara.Error("No data available")       
+        solara.GridDraggable(items=dashboard_cards, grid_layout=grid_layout_dyn, resizable=True, draggable=True, on_grid_layout=set_grid_layout)
+
+    return main
+
+
 
      
 def get_data_for_symbol(symbol, coingecko_list):

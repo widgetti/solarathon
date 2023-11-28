@@ -43,4 +43,4 @@ jobs:
 
           git add .
           git commit -m 'github action : ingestion data'
-          git push -f origin dev:ploomber
+          git push -f origin dev:ploomber_dev

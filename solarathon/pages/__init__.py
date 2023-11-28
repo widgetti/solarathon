@@ -33,4 +33,4 @@ def Page():
 @solara.component
 def Layout(children):
     # this is the default layout, but you can override it here, for instance some extra padding
-    return solara.AppLayout(children=children, style={"padding": "20px"})
+    return solara.AppLayout(children=children, style={"padding": "20px", "max-width": "1200px", "margin": "0 auto"})

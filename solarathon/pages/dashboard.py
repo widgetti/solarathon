@@ -211,7 +211,7 @@ def Page():
         solara.SelectMultiple(f"Tickers from {default_echange}", init_app_state, all_tickers)
 
         dashboard_cards = []
-        row_widths = [3, 5, 4]
+        row_widths = [4, 4, 4]
 
         def get_coingecko_data():
             coingecko_json_url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc"

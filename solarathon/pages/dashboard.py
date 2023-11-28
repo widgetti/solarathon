@@ -262,13 +262,13 @@ def Page():
                     ).key(symbol)
                     dashboard_cards.append(card)
 
-        grid_layout_dyn = [
+        solara.use_memo(lambda: set_grid_layout([
             {"h": 6, "i": str(i), "moved": False, "w": row_widths[i % len(row_widths)], "x": sum(row_widths[:i % len(row_widths)]), "y": (i // len(row_widths)) * 6}
             for i in range(len(init_app_state.value))
-        ]
+        ]),[dashboard_cards])
 
         len(dashboard_cards)<= 0 and solara.Error("No data available")       
-        solara.GridDraggable(items=dashboard_cards, grid_layout=grid_layout_dyn, resizable=True, draggable=True, on_grid_layout=set_grid_layout)
+        solara.GridDraggable(items=dashboard_cards, grid_layout=grid_layout, resizable=True, draggable=True, on_grid_layout=set_grid_layout)
 
     return main
 

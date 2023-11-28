@@ -8,6 +8,10 @@ description = "Template project for Solarathon 2023"
 version = "0.0.1"
 dependencies = [
     "solara==1.23.0",
+    "pydantic==2.5.2"
+    "yfinance==0.2.32",
+    "mplfinance==0.12.10b0",
+    "pandas_ta==0.3.14b0",
 ]
 
 [project.optional-dependencies]

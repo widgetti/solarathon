@@ -34,7 +34,7 @@ jobs:
           DISCORD_SERVER_ID: ${{ secrets.DISCORD_SERVER_ID }}
         run: |
           tree .  
-          python backend/discord/fake_pipeline.py
+          python backend/haystack/fake_pipeline.py
 
       - name: Commit
         run: |

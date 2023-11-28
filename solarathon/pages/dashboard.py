@@ -267,7 +267,7 @@ def Page():
             for i in range(len(init_app_state.value))
         ]),[dashboard_cards])
 
-        len(dashboard_cards)<= 0 and solara.Error("No data available")       
+        len(dashboard_cards)<= 0 and solara.Error("Select at least one ticker")       
         solara.GridDraggable(items=dashboard_cards, grid_layout=grid_layout, resizable=True, draggable=True, on_grid_layout=set_grid_layout)
 
     return main

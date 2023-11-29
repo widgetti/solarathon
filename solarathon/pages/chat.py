@@ -3,36 +3,51 @@ import time
 from solarathon.components import chat
 import typing
 
+
 class Message(typing.TypedDict):
     user: bool
     name: str
     message: str
 
+
 messages = solara.reactive([])
 name = solara.reactive("User")
+
 
 @solara.component
 def Page():
     def add_message(new_message):
-        messages.set([
-            *messages.value,
-            {"user": True, "name": name.value, "message": new_message,},
-        ])
+        messages.set(
+            [
+                *messages.value,
+                {
+                    "user": True,
+                    "name": name.value,
+                    "message": new_message,
+                },
+            ]
+        )
 
     def bot_response():
         # only respond if the last message was from the user
         if len(messages.value) == 0:
             print("no messages")
             return
-        if not messages.value[-1]["user"]:        
+        if not messages.value[-1]["user"]:
             print("I don't reply to myself")
             return
         time.sleep(2)
-        messages.set([
-            *messages.value,
-            {"user": False, "name": "Bot", "message": "Hello, " + name.value + " I cannot help you.",},
-        ])
-    
+        messages.set(
+            [
+                *messages.value,
+                {
+                    "user": False,
+                    "name": "Bot",
+                    "message": "Hello, " + name.value + " I cannot help you.",
+                },
+            ]
+        )
+
     print(messages.value)
     thread_result = solara.use_thread(bot_response, dependencies=[messages.value])
     with solara.Column(style={"height": "100%"}):

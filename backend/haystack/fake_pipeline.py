@@ -11,4 +11,4 @@ prod_data_path = Path('solarathon/assets/data')
 prod_data_path.mkdir(parents=True, exist_ok=True)
 
 with open(prod_data_path / f'haystack.json', 'w') as f:
-    json.dump(raw, f)
+    json.dump(raw[:100], f)

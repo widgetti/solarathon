@@ -1,7 +1,6 @@
 import solara
 
 
-
 @solara.component
 def Page():
     clicks = solara.use_reactive(0)

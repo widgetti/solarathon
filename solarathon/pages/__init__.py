@@ -7,7 +7,9 @@ word_limit = solara.reactive(10)
 
 
 # in case you want to override the default order of the tabs
-route_order = ["/", "settings", "chat", "clickbutton", "technicalanaly", "dashboard"]
+# route_order = ["/", "settings", "chat", "clickbutton", "technicalanaly", "dashboard"]
+route_order = ["/", "overview", "analyze"]
+
 
 @solara.component
 def Page():
@@ -21,16 +23,25 @@ def Page():
 
         # Display messages based on the current word count and word limit.
         if word_count >= int(word_limit.value):
-            solara.Error(f"With {word_count} words, you passed the word limit of {word_limit.value}.")
+            solara.Error(
+                f"With {word_count} words, you passed the word limit of {word_limit.value}."
+            )
         elif word_count >= int(0.8 * word_limit.value):
-            solara.Warning(f"With {word_count} words, you are close to the word limit of {word_limit.value}.")
+            solara.Warning(
+                f"With {word_count} words, you are close to the word limit of {word_limit.value}."
+            )
         else:
             solara.Success("Great short writing!")
 
-        solara.Markdown("*First exercise*: remove this text and write your own sentence.")
+        solara.Markdown(
+            "*First exercise*: remove this text and write your own sentence."
+        )
 
 
 @solara.component
 def Layout(children):
     # this is the default layout, but you can override it here, for instance some extra padding
-    return solara.AppLayout(children=children, style={"padding": "20px", "max-width": "1200px", "margin": "0 auto"})
+    return solara.AppLayout(
+        children=children,
+        style={"padding": "20px", "max-width": "1200px", "margin": "0 auto"},
+    )

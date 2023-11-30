@@ -28,9 +28,9 @@ faqs = [
                     {faq['answer']}
                   """,
      'content_type' : 'text',
-     'integrations' : faq['integrations'], 
-     'topic' : faq['topic'], 
-     'category' : faq['category']
+     'integrations' : faq['integrations'] if faq['integrations'] else [], 
+     'topic' : faq['topic'] if faq['topic'] else '' , 
+     'category' : faq['category'] if faq['category'] else ''
      } for id, faq in enumerate(data)
 ]
 with open(FAQS_PATH_JSON_FORMATTED, 'w') as f:

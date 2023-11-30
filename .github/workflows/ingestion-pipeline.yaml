@@ -27,8 +27,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r backend/discord_pipeline/requirements.txt
           python backend/discord_pipeline/get_messages.py
-        with:
-          python-version: '3.9'  
 
       - name: Run Haystack pipeline Step 1 and Step 2
         env:
@@ -43,7 +41,4 @@ jobs:
 
           python backend/haystack_pipeline/step_2_indexing.py
 
-          tree . 
-
-        with:
-          python-version: '3.9'
+          tree .

@@ -13,7 +13,7 @@ DISCORD_SERVER_ID = os.getenv('DISCORD_SERVER_ID')
 DISCORD_MESSAGES_PATH_JSON = f'data/{DISCORD_SERVER_ID}_selected_channels_messages.json'
 DISCORD_MESSAGES_PATH_JSON_FORMATTED = f'data/filtered_{DISCORD_SERVER_ID}_selected_channels_messages.json'
 FULL_FAQS_PATH = 'data/full_faq.json'
-FAQS_PATH_JSON_FORMATTED = f'data/full_faq_formatted.json'
+FAQS_PATH_JSON_FORMATTED = f'solarathon/assets/full_fe_faqs.json'
 
 with open(FULL_FAQS_PATH, 'r') as f:
     data = json.loads(f.read())
@@ -36,7 +36,7 @@ faqs = [
 with open(FAQS_PATH_JSON_FORMATTED, 'w') as f:
     json.dump(faqs, f)
     
-    #* Indexing Pipeline
+#* Indexing Pipeline
 
 embedding_model = 'sentence-transformers/all-mpnet-base-v2' # https://huggingface.co/sentence-transformers/all-mpnet-base-v2
 llm = 'gpt-3.5-turbo-16k'

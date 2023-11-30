@@ -5,7 +5,7 @@ on:
   push:
     branches:
       # only deploy from the ploomber branch
-      - dev
+      - ploomber_dev
 
 jobs:
   deploy-to-ploomber-cloud:

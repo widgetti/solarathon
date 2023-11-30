@@ -13,9 +13,9 @@ from haystack.nodes import  JsonConverter
 #%% []
 #* Refactor Discord Messages JSON file
 DISCORD_SERVER_ID = os.getenv('DISCORD_SERVER_ID')
-DISCORD_MESSAGES_PATH_JSON = f'../data/{DISCORD_SERVER_ID}_selected_channels_messages.json'
-DISCORD_MESSAGES_PATH_JSON_FORMATTED = f'../data/filtered_{DISCORD_SERVER_ID}_selected_channels_messages.json'
-FULL_FAQS_PATH = '../data/full_faq.json'
+DISCORD_MESSAGES_PATH_JSON = f'data/{DISCORD_SERVER_ID}_selected_channels_messages.json'
+DISCORD_MESSAGES_PATH_JSON_FORMATTED = f'data/filtered_{DISCORD_SERVER_ID}_selected_channels_messages.json'
+FULL_FAQS_PATH = 'data/full_faq.json'
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 discord_messages = json.loads(open(DISCORD_MESSAGES_PATH_JSON).read())
@@ -127,7 +127,7 @@ for i in range(0, len(DOCUMENTS), 150) :
         pipe , out = run_pipeline(DOCUMENTS[i:(i+150)])
         # print(out['results'][0])
         full_docs.append(out)
-        with open(f'../data/faq_{i}.json', 'w') as f:
+        with open(f'data/faq_{i}.json', 'w') as f:
             json.dump(out['results'][0], f)
             print(f'PROCESSED - Chunck messages from {i} to {i+150}')
     except:
@@ -135,7 +135,7 @@ for i in range(0, len(DOCUMENTS), 150) :
 
 from pathlib import Path
 full_json_docs = []
-for jpath in Path('../data').glob('faq_*.json'):
+for jpath in Path('data').glob('faq_*.json'):
     data = json.load(open(jpath))
     full_json_docs.extend( json.loads(data) )
 

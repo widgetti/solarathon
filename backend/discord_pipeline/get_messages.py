@@ -51,7 +51,9 @@ class FAQCreatorBotClient(discord.Client):
         for c in self.text_selected_channels:
             print(f'{c.name} the current channel')
             try:
-                messages = [message async for message in c.history(limit = 100_000)]
+                #TODO uncomment for PROD
+                # messages = [message async for message in c.history(limit = 100_000)] 
+                messages = [message async for message in c.history(limit = 500)]
             except:
                 print(f'error with channel : {c.name}')
                 messages = []

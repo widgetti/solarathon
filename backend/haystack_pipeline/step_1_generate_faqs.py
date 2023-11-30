@@ -122,16 +122,16 @@ def run_pipeline(docs):
 
 full_docs = []
 DOCUMENTS = message_documents['documents']
-for i in range(0, len(DOCUMENTS), 150) :
+for i in range(0, len(DOCUMENTS), 100) :
     try:
-        pipe , out = run_pipeline(DOCUMENTS[i:(i+150)])
+        pipe , out = run_pipeline(DOCUMENTS[i:(i+100)])
         # print(out['results'][0])
         full_docs.append(out)
         with open(f'data/faq_{i}.json', 'w') as f:
             json.dump(out['results'][0], f)
-            print(f'PROCESSED - Chunck messages from {i} to {i+150}')
+            print(f'PROCESSED - Chunck messages from {i} to {i+100}')
     except:
-        print(f'SKIPPED - Chunck messages from {i} to {i+150}')
+        print(f'SKIPPED - Chunck messages from {i} to {i+100}')
 
 from pathlib import Path
 full_json_docs = []

@@ -145,22 +145,23 @@ crypto_list = [
     "XMR-USD",
 ]
 
+# Initialization default ticker
+
+crypto = solara.reactive("BTC-USD")
+
+# Technical analysis, feature selection state initialization
+bbanduplow = solara.reactive(True)
+bbandmidd = solara.reactive(True)
+ema10 = solara.reactive(True)
+ema30 = solara.reactive(True)
+days_range = solara.reactive(60)
+returns = solara.reactive(False)
+volume = solara.reactive(False)
+message = ""
 
 # solara component
 @solara.component
 def Page():
-    # Initialization default ticker
-    crypto = solara.reactive("BTC-USD")
-
-    # Technical analysis, feature selection state initialization
-    bbanduplow = solara.reactive(True)
-    bbandmidd = solara.reactive(True)
-    ema10 = solara.reactive(True)
-    ema30 = solara.reactive(True)
-    days_range = solara.reactive(60)
-    returns = solara.reactive(False)
-    volume = solara.reactive(False)
-    message = ""
 
     solara.Markdown(
         r"""

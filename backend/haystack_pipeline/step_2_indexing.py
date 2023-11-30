@@ -90,5 +90,5 @@ indexing_pipeline.run(file_paths=[FAQS_PATH_JSON_FORMATTED])
 
 document_store.save(
     index_path  = f'solarathon/assets/{index_filename}', 
-    config_path = f'../solarathon/assets/{config_filename}'
+    config_path = f'solarathon/assets/{config_filename}'
     )

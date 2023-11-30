@@ -10,10 +10,10 @@ from haystack.nodes import  JsonConverter
 
 #* Refactor Discord Messages JSON file
 DISCORD_SERVER_ID = os.getenv('DISCORD_SERVER_ID')
-DISCORD_MESSAGES_PATH_JSON = f'../data/{DISCORD_SERVER_ID}_selected_channels_messages.json'
-DISCORD_MESSAGES_PATH_JSON_FORMATTED = f'../data/filtered_{DISCORD_SERVER_ID}_selected_channels_messages.json'
-FULL_FAQS_PATH = '../data/full_faq.json'
-FAQS_PATH_JSON_FORMATTED = f'../data/full_faq_formatted.json'
+DISCORD_MESSAGES_PATH_JSON = f'data/{DISCORD_SERVER_ID}_selected_channels_messages.json'
+DISCORD_MESSAGES_PATH_JSON_FORMATTED = f'data/filtered_{DISCORD_SERVER_ID}_selected_channels_messages.json'
+FULL_FAQS_PATH = 'data/full_faq.json'
+FAQS_PATH_JSON_FORMATTED = f'data/full_faq_formatted.json'
 
 with open(FULL_FAQS_PATH, 'r') as f:
     data = json.loads(f.read())
@@ -57,7 +57,7 @@ faiss_filename = 'faiss_document_store.db'
 
 
 document_store = FAISSDocumentStore( # https://docs.haystack.deepset.ai/reference/document-store-api#faissdocumentstore
-    sql_url=f"sqlite:///../solarathon/assets/{faiss_filename}",
+    sql_url=f"sqlite:///solarathon/assets/{faiss_filename}",
     faiss_index_factory_str="Flat"
     )
 
@@ -89,6 +89,6 @@ indexing_pipeline.add_node(component=document_store, name="DocumentStore", input
 indexing_pipeline.run(file_paths=[FAQS_PATH_JSON_FORMATTED])
 
 document_store.save(
-    index_path  = f'../solarathon/assets/{index_filename}', 
+    index_path  = f'solarathon/assets/{index_filename}', 
     config_path = f'../solarathon/assets/{config_filename}'
     )

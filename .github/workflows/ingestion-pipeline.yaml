@@ -32,7 +32,6 @@ jobs:
         env:
           DISCORD_SERVER_ID: ${{ secrets.DISCORD_SERVER_ID }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          HAYSTACK_REMOTE_API_TIMEOUT_SEC: ${{ secrets.HAYSTACK_REMOTE_API_TIMEOUT_SEC }}
         run: |
           tree . 
 

@@ -5,7 +5,6 @@ from haystack.nodes import PreProcessor
 from haystack.document_stores import FAISSDocumentStore
 from haystack.nodes import EmbeddingRetriever
 import logging
-from pathlib import Path
 import json
 from haystack.nodes import  JsonConverter
 

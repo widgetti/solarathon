@@ -1,3 +1,4 @@
 farm-haystack[faiss]
 farm-haystack[inference] 
 farm-haystack[preprocessing]
+python-dotenv

@@ -16,7 +16,7 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
-          python-version: '3.11'
+          python-version: '3.9'
 
       - name: Fetch Initial Discord Messages
         env:
@@ -27,26 +27,23 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r backend/discord_pipeline/requirements.txt
           python backend/discord_pipeline/get_messages.py
-          
+        with:
+          python-version: '3.9'  
 
-      - name: Run Haystack pipeline Step 1
+      - name: Run Haystack pipeline Step 1 and Step 2
         env:
           DISCORD_SERVER_ID: ${{ secrets.DISCORD_SERVER_ID }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           HAYSTACK_REMOTE_API_TIMEOUT_SEC: ${{ secrets.HAYSTACK_REMOTE_API_TIMEOUT_SEC }}
         run: |
-          tree .  
+          tree . 
+
           pip install -r backend/haystack_pipeline/requirements.txt
           python backend/haystack_pipeline/step_1_generate_faqs.py
-          tree .  
 
-      - name: Run Haystack pipeline Step 2
-        env:
-          DISCORD_SERVER_ID: ${{ secrets.DISCORD_SERVER_ID }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          HAYSTACK_REMOTE_API_TIMEOUT_SEC: ${{ secrets.HAYSTACK_REMOTE_API_TIMEOUT_SEC }}
-        run: |
-          tree .  
-          pip install -r backend/haystack_pipeline/requirements.txt
           python backend/haystack_pipeline/step_2_indexing.py
-          tree .
+
+          tree . 
+
+        with:
+          python-version: '3.9'

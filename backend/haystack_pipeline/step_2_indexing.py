@@ -1,4 +1,7 @@
 #!pip install discord.py farm-haystack[faiss] python-dotenv farm-haystack[inference] farm-haystack[preprocessing]
+from dotenv import load_dotenv
+load_dotenv()
+
 import os
 from haystack.pipelines import Pipeline
 from haystack.nodes import PreProcessor

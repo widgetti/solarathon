@@ -1,7 +1,7 @@
 from typing import Any
 from discord.flags import Intents
-# from dotenv import load_dotenv
-# load_dotenv()
+from dotenv import load_dotenv
+load_dotenv()
 import os
 import discord
 import json

@@ -60,7 +60,7 @@ message_documents = p.run(file_paths = [DISCORD_MESSAGES_PATH_JSON_FORMATTED])
 
 # llm = 'gpt-3.5-turbo-16k'
 llm = 'gpt-4-0613'
-max_length = 4000
+max_length = 3000
 
 # Initalize the node
 prompt_template = PromptTemplate("""
@@ -111,18 +111,18 @@ def run_pipeline(docs):
                     Return the output as a JSON array in the following format:
                         [
                             {
-                                "Question": "Question 1",
-                                "Answer": "Answer 1",
-                                "Topic" : "Topic 1" , 
-                                "Integrations" : ["integration1", "integration2" ] , 
-                                "Category" : "Category A"
+                                "question": "Question 1",
+                                "answer": "Answer 1",
+                                "topic" : "Topic 1" ,
+                                "integrations" : ["integration1", "integration2" ] ,
+                                "category" : "Category A"
                             },
                             {
-                                "Question": "Question 2",
-                                "Answer": "Answer 2",
-                                "Topic" : "Topic 1" , 
-                                "Integrations" : ["integration1", "integration2" ] , 
-                                "Category" : "Category A"
+                                "question": "Question 2",
+                                "answer": "Answer 2",
+                                "topic" : "Topic 1" ,
+                                "integrations" : ["integration1", "integration2" ] ,
+                                "category" : "Category A"
                             }
                         ] 
                     Do not deviate from the specified JSON array format.""", 
@@ -132,22 +132,34 @@ def run_pipeline(docs):
 
 full_docs = []
 DOCUMENTS = message_documents['documents']
-for i in range(0, len(DOCUMENTS), 100) :
+for i in range(0, len(DOCUMENTS), 80) :
     try:
-        pipe , out = run_pipeline(DOCUMENTS[i:(i+100)])
+        pipe , out = run_pipeline(DOCUMENTS[i:(i+80)])
         # print(out['results'][0])
         full_docs.append(out)
         with open(f'data/faq_{i}.json', 'w') as f:
             json.dump(out['results'][0], f)
-            print(f'PROCESSED - Chunck messages from {i} to {i+100}')
+            print(f'PROCESSED - Chunck messages from {i} to {i+80}')
     except:
-        print(f'SKIPPED - Chunck messages from {i} to {i+100}')
+        print(f'SKIPPED - Chunck messages from {i} to {i+80}')
 
 from pathlib import Path
 full_json_docs = []
 for jpath in Path('data').glob('faq_*.json'):
-    data = json.load(open(jpath))
-    full_json_docs.extend( json.loads(data) )
+    try:
+        data = json.load(open(jpath))
+        print(len(data))
+        full_json_docs.extend( json.loads(data,  strict=False) )
+        print(f'PROCESSED - JSON Parsing ok from {jpath}')
+    except Exception as e:
+        print(f'SKIPPED - JSON Parsing Failed from {jpath} - {e}')
+        
 
+print('total discord message : ', len(full_json_docs))
+
+
+for i,_ in enumerate(full_json_docs):
+    full_json_docs[i]['id'] = i+1
+    
 with open(FULL_FAQS_PATH, 'w') as f:
     json.dump(full_json_docs, f)

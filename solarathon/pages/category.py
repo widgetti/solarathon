@@ -4,13 +4,14 @@ import os
 import json
 from collections import Counter
 from solarathon.components import header
-
+from pathlib import Path
 import solara
+from solarathon.components import input_search
 
 ENV = os.getenv('ENV')
 # data_path = '../../' if ENV == 'LOCAL' else ''
 data_path = Path(__file__).parent.parent
-FULL_FAQS_PATH = f'{data_path}/assets_backup/full_faq.json'
+FULL_FAQS_PATH = f'{data_path}/assets/full_faq.json'
 
 def import_raw_data():
     # raw_data = Path(__file__).parent.parent
@@ -45,8 +46,8 @@ def Page(cat_name: Optional[str] = None, page: int = 0, page_size=100):
         with solara.Row(justify='center', style={'background-color':'rgb(28,43,51)', 'height':'250px'}):
             with solara.Column(align='center', style={'background-color':'rgb(28,43,51)'}):
                 solara.Markdown('## Type in a question, someone may have already answered it', style={"padding":"12px 12px 12px 12px","font-size":"16px", "color":"white"})
-                with solara.Column(align='center', style={'background-color':'white', 'width':'620px','height':'60px','align-items':'center'}):
-                    solara.InputText('Type a question . . .')
+                with solara.Link('/faq'):
+                    input_search.SearchRetriever()
         
         if cat_name is None:
             with solara.Column(align='center', style={ 'width':'100%' }):

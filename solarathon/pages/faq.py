@@ -4,13 +4,16 @@ import os
 import json
 from collections import Counter
 from solarathon.components import header
+from pathlib import Path
+from solarathon.components.input_search import retriever
+from solarathon.doc_functions import *
 
 import solara
 
 ENV = os.getenv('ENV')
 # data_path = '../../' if ENV == 'LOCAL' else ''
 data_path = Path(__file__).parent.parent
-FULL_FAQS_PATH = f'{data_path}/assets_backup/full_faq.json'
+FULL_FAQS_PATH = f'{data_path}/assets/full_faq.json'
 
 
 def import_raw_data():
@@ -29,6 +32,7 @@ def Page(faq_id: Optional[str] = None, page: int = 0, page_size=100):
 
 
     data,categories,topics = solara.use_memo(import_raw_data, [])
+    filter, set_filter = solara.use_state("")
 
 
     with solara.Column( style={"padding-top": "0px"}):
@@ -43,29 +47,37 @@ def Page(faq_id: Optional[str] = None, page: int = 0, page_size=100):
             with solara.Column(align='center', style={'background-color':'rgb(28,43,51)'}):
                 solara.Markdown('## Type in a question, someone may have already answered it', style={"padding":"12px 12px 12px 12px","font-size":"16px", "color":"white"})
                 with solara.Column(align='center', style={'background-color':'white', 'width':'620px','height':'60px','align-items':'center'}):
-                    solara.InputText('Type a question . . .')
-        
-        if faq_id is None:
-                    with solara.GridFixed(columns=3):
+                        solara.InputText(label="Type a question . . .", value=filter, on_value=set_filter, continuous_update=True)
 
-                        for faq in data:
-                            title = faq['question'] if len(faq['question'])<60 else faq['question'][:60] + '...'
-                            answer = faq['answer'] if len(faq['answer'])<350 else faq['answer'][:350] + '...'
-                            with solara.Card(title, classes=['faqcard']):
+        if faq_id is None:
+            if filter:
+                    retrieved_docs = retriever.run_query(filter)
+                    results = list_retriever_results(retrieved_docs, show_score=False)
+                    print(results)
+                    faqs_f = results
+            else: faqs_f = data
+            
+            with solara.GridFixed(columns=3):
+
+                for faq in faqs_f:
+                    title = faq['question'] if len(faq['question'])<60 else faq['question'][:60] + '...'
+                    answer = faq['answer'] if len(faq['answer'])<350 else faq['answer'][:350] + '...'
+                    with solara.Card(title, classes=['faqcard']):
+                        
+                        with solara.Column(
+                                style={'width':'90%', 
+                                        'height':'250px',
+                                        'padding':'6px',
+                                        'justify-content': 'space-between'
+                                        }):                               
+                            with solara.Column(style={'width':'100%'}):                                
+                                solara.Markdown(answer)
                                 
-                                with solara.Column(
-                                        style={'width':'90%', 
-                                               'height':'250px',
-                                               'padding':'6px',
-                                               'justify-content': 'space-between'
-                                               }):                               
-                                    with solara.Column(style={'width':'100%'}):                                
-                                        solara.Markdown(answer)
-                                        
-                                    with solara.Column(style={'width':'100%','align-self':'flex-end'}):
-                                        with solara.Row(justify='end'):
-                                            with solara.Link(f"/faq/{faq['id']}"):
-                                                solara.Button('Read more', classes=['faqbutton'])
+                            with solara.Column(style={'width':'100%','align-self':'flex-end'}):
+                                with solara.Row(justify='end'):
+                                    with solara.Link(f"/faq/{faq['id']}"):
+                                        solara.Button('Read more', classes=['faqbutton'])
+            
         else:
             print(faq_id)
             faq = [faq for faq in data if faq['id']==int(faq_id)][0]
@@ -79,8 +91,7 @@ def Page(faq_id: Optional[str] = None, page: int = 0, page_size=100):
                             solara.Text(faq['answer'], style={"padding":"24px 24px 24px 24px","font-size":"20px"})
                 with solara.Column():
                     pass
-                        # with solara.GridFixed(columns=3):
-                        #     for cat in data[:9]:
+
                                 
             
         footer.Footer()  

@@ -17,10 +17,18 @@ def Footer():
             with solara.Column():
                 pass
             with solara.Column( gap = '24px' , style = {'padding':'12px', 'background':'rgb(28,43,51)',"font-size":"14px", "color":"white"}):
-                solara.Text('Test demo text')
-                solara.Text('Test demo text')
-                solara.Text('Test demo text')
+                solara.Text('Main Page')
+                with solara.Link(f"/"):
+                    solara.Text('Home Page') 
+                with solara.Link(f"/category"):
+                    solara.Text('Categories')  
+                with solara.Link(f"/faq"):
+                    solara.Text('All FAQs') 
             with solara.Column( gap = '24px' , style = {'padding':'12px', 'background':'rgb(28,43,51)',"font-size":"14px", "color":"white"}):
-                solara.Text('Test demo text')
-                solara.Text('Test demo text')
-                solara.Text('Test demo text')
+                solara.Text('Main Page')
+                with solara.Link(f"/"):
+                    solara.Text('Home Page') 
+                with solara.Link(f"/category"):
+                    solara.Text('Categories')  
+                with solara.Link(f"/faq"):
+                    solara.Text('All FAQs') 

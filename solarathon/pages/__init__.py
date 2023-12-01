@@ -7,12 +7,13 @@ from collections import Counter
 from solarathon.components import header
 from solarathon.components import input_search
 from solarathon.components import footer
+from pathlib import Path
 
 ENV = os.getenv('ENV')
 # data_path = '../../' if ENV == 'LOCAL' else ''
 
 data_path = Path(__file__).parent.parent
-FULL_FAQS_PATH = f'{data_path}/assets_backup/full_faq.json'
+FULL_FAQS_PATH = f'{data_path}/assets/full_faq.json'
 
 # in case you want to override the default order of the tabs
 route_order = ["/", 'category','faq']
@@ -30,7 +31,7 @@ def import_raw_data():
     categories = Counter([f['category'] for f in data])
     topics = set([f['topic'] for f in data])
     # print(data[:3])
-    print(categories)
+    # print(categories)
     # print(topics)
     return data,categories,topics
 
@@ -50,7 +51,8 @@ def Page():
         with solara.Row(justify='center', style={'background-color':'rgb(28,43,51)', 'height':'250px'}):
             with solara.Column(align='center', style={'background-color':'rgb(28,43,51)'}):
                 solara.Markdown('## Type in a question, someone may have already answered it', style={"padding":"12px 12px 12px 12px","font-size":"16px", "color":"white"})
-                input_search.SearchRetriever()
+                with solara.Link('/faq'):
+                    input_search.SearchRetriever()
         
         with solara.Column(align='center', style={ 'width':'100%' }):
             with solara.Row(justify='start',style={ 'width':'1100px'}):
@@ -91,7 +93,8 @@ def Page():
                                         
                                     with solara.Column(style={'width':'100%','align-self':'flex-end'}):
                                         with solara.Row(justify='end'):
-                                            with solara.Link(f"/faq/{faq['id']}"):
+                                            with solara.Link(f"/faq/{faq}"):
+                                            # with solara.Link(f"/faq/{faq['id']}"):
                                                 solara.Button('Read more', classes=['faqbutton'])
         footer.Footer()        
 

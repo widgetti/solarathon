@@ -19,7 +19,7 @@ FULL_FAQS_PATH = f'{data_path}/assets/full_faq.json'
 route_order = ["/", 'category','faq']
 
 openaikey = os.getenv("OPENAI_API_KEY")
-faiss_filename = os.getenv("faiss_filename")
+faiss_filename = 'faiss_document_store.db'
 DISCORD_SERVER_ID = solara.reactive("")
 DISCORD_SERVER_ID = os.getenv("DISCORD_SERVER_ID")
 

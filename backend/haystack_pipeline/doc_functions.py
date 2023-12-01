@@ -16,46 +16,33 @@ def delete_documents(filename, filepath):
         filename = f.f_code.co_filename
         message = f'{filename} not deleted. An error occurred on line {lineno} in {filename}: {error}.'
         print(message)
-
-def haystack_doc_to_dict(input_string):
-    # Define a regular expression pattern
-    pattern = r'\nQuestion\s*:\s*(.*?)\s*;\s*Answer\s*:\s*(.*?)\s*\n'
-
-    # Search for matches using the pattern
-    match = re.search(pattern, input_string)
-
-    # Check if a match is found
-    if match:
-        # Extract the captured groups (Question and Answer)
-        question = match.group(1)
-        answer = match.group(2)
-
-        # Create and return a dictionary
-        result_dict = {'Question': question, 'Answer': answer}
-        return result_dict
-    else:
-        return None
     
-def parse_input_string(input_string):
+def parse_retriever_doc(doc):
     # Define a more flexible regular expression pattern
-    pattern = r'\n(?:Question\s*:\s*(.*?)\s*;)?(?:Answer\s*:\s*(.*?)\s*;)?(?:Integrations\s*:\s*(.*?)\s*;)?(?:Category\s*:\s*(.*?)\s*)?\n'
-
+    pattern = r'\n(?:Question\s*:\s*(.*?)\s*;)?\s*(?:Answer\s*:\s*(.*?)\s*)?'
+    pattern = r'\nQuestion\s*:\s*(.*?)\s*;\s*Answer\s*:\s*(.*?)\s*\n'
+    result_dict = dict()
     # Search for matches using the pattern
-    match = re.search(pattern, input_string)
+    match = re.search(pattern, doc.content, re.IGNORECASE)
 
     # Check if a match is found
     if match:
         # Extract the captured groups (Question, Answer, Integrations, and Category)
         question = match.group(1)
         answer = match.group(2)
-        integrations = match.group(3)
-        category = match.group(4)
 
         # Create and return a dictionary
-        result_dict = {'Question': question, 'Answer': answer, 'Integrations': integrations, 'Category': category}
-        return result_dict
-    else:
-        return None
+        result_dict = {'Question': question, 'Answer': answer}
+    # print(f'doc.meta keys: {doc.meta.keys()}')
+    if 'integrations' in [key.lower() for key in doc.meta.keys()]:
+        result_dict['Integrations'] = doc.meta.get('integrations', 'key not found')
+        if result_dict['Integrations'] == doc.meta.get('Integrations', 'key not found'):
+            result_dict['Integrations'] = None
+    if 'category' in [key.lower() for key in doc.meta.keys()]:
+        result_dict['Category'] = doc.meta.get('category', 'key not found')
+        if result_dict['Category'] == doc.meta.get('Category', 'key not found'):
+            result_dict['Category'] = None
+    return result_dict
 
 def list_retriever_results(retriever_results, show_score=False):
     """
@@ -77,9 +64,9 @@ def list_retriever_results(retriever_results, show_score=False):
     for doc in retriever_results[0]['documents']:
         if show_score:
             results.append({
-                **haystack_doc_to_dict(doc.content), 
+                **parse_retriever_doc(doc), 
                 **{'Relevance Score': doc.score}
                 })
         else:
-            results.append(haystack_doc_to_dict(doc.content))
+            results.append(parse_retriever_doc(doc))
     return results

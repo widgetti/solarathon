@@ -16,8 +16,6 @@ if os.getenv('run_locally') == '1':
 
 DISCORD_MESSAGES_PATH_JSON = f'{data_path}{DISCORD_SERVER_ID}_selected_channels_messages.json'
 DISCORD_MESSAGES_PATH_JSON_FORMATTED = f'{data_path}filtered_{DISCORD_SERVER_ID}_selected_channels_messages.json'
-FULL_FAQS_PATH = f'{data_path}full_faq.json'
-FAQS_PATH_JSON_FORMATTED = f'{data_path}full_faq_formatted.json'
 
 embedding_model = 'sentence-transformers/all-mpnet-base-v2' # https://huggingface.co/sentence-transformers/all-mpnet-base-v2
 llm = 'gpt-3.5-turbo-16k'

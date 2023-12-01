@@ -56,7 +56,7 @@ max_length = 4000
 
 # Initalize the node
 prompt_template = PromptTemplate("""
-                   You are a realy smart conversation analyzer that generate Frequently Asked Questions document from users messages.
+                   You are a really smart conversation analyzer that generate Frequently Asked Questions document from users messages.
                    Your goal is to identify the main questions and problems that users have with the Solara.
                    Solara is a new and fantastic framework for development of web app using python.
                    The following context contains some messages.

@@ -37,9 +37,11 @@ retriever = EmbeddingRetriever( # https://docs.haystack.deepset.ai/reference/ret
     model_format="sentence_transformers",
     top_k = 5
 )
-
+################
+# MODIFY THIS FOR UI
+################
 user_search_term = 'Jupyter notebook' #### MAKE THIS A UI INPUT
 retrieved_docs = retriever.run_query(user_search_term)
-results = list_retriever_results(retrieved_docs)
+results = list_retriever_results(retrieved_docs) ### THIS WILL BE DISPLAYED IN THE FRONTEND
 
 

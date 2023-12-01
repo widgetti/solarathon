@@ -18,20 +18,14 @@ def delete_documents(filename, filepath):
         print(message)
     
 def parse_retriever_doc(doc):
-    # Define a more flexible regular expression pattern
-    pattern = r'\n(?:Question\s*:\s*(.*?)\s*;)?\s*(?:Answer\s*:\s*(.*?)\s*)?'
     pattern = r'\nQuestion\s*:\s*(.*?)\s*;\s*Answer\s*:\s*(.*?)\s*\n'
     result_dict = dict()
-    # Search for matches using the pattern
     match = re.search(pattern, doc.content, re.IGNORECASE)
 
-    # Check if a match is found
     if match:
-        # Extract the captured groups (Question, Answer, Integrations, and Category)
         question = match.group(1)
         answer = match.group(2)
 
-        # Create and return a dictionary
         result_dict = {'Question': question, 'Answer': answer}
     # print(f'doc.meta keys: {doc.meta.keys()}')
     if 'integrations' in [key.lower() for key in doc.meta.keys()]:

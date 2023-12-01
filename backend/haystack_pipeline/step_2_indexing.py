@@ -1,5 +1,5 @@
 #!pip install discord.py farm-haystack[faiss] python-dotenv farm-haystack[inference] farm-haystack[preprocessing]
-from file_functions import *
+from doc_functions import *
 import os
 if os.getenv('run_locally') != '1':
     from dotenv import load_dotenv

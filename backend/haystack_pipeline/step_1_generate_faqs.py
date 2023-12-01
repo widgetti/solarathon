@@ -14,7 +14,15 @@ from haystack.nodes import  JsonConverter
 DISCORD_SERVER_ID = os.getenv('DISCORD_SERVER_ID')
 DISCORD_MESSAGES_PATH_JSON = f'data/{DISCORD_SERVER_ID}_selected_channels_messages.json'
 DISCORD_MESSAGES_PATH_JSON_FORMATTED = f'data/filtered_{DISCORD_SERVER_ID}_selected_channels_messages.json'
-FULL_FAQS_PATH = 'data/full_faq.json'
+
+data_path = 'data/'
+assets_path = 'solarathon/assets/'
+if os.getenv('run_locally') == '1':
+    data_path = f'../../{data_path}'
+    assets_path = f'../../{assets_path}'
+
+FULL_FAQS_PATH = f'{assets_path}full_faq.json'
+
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 discord_messages = json.loads(open(DISCORD_MESSAGES_PATH_JSON).read())

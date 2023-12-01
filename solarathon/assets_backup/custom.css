@@ -1,0 +1,14 @@
+/* Example of how to change the color of the label in a v-input */
+
+.v-input label.v-label {
+    color:black;
+ }
+
+ /* workaround for an issue in solara */
+ .solara-autorouter-content {
+    height: 100%;
+ }
+
+ * {
+   font-family: Tahoma !important;
+ }

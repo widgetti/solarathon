@@ -11,8 +11,10 @@ from haystack.nodes import EmbeddingRetriever
 
 DISCORD_SERVER_ID = os.getenv('DISCORD_SERVER_ID')
 data_path = 'data/'
+assets_path = 'solarathon/assets'
 if os.getenv('run_locally') == '1':
-    data_path += '../../'
+    data_path = f'../../{data_path}'
+    assets_path = f'../../{assets_path}'
 
 DISCORD_MESSAGES_PATH_JSON = f'{data_path}{DISCORD_SERVER_ID}_selected_channels_messages.json'
 DISCORD_MESSAGES_PATH_JSON_FORMATTED = f'{data_path}filtered_{DISCORD_SERVER_ID}_selected_channels_messages.json'
@@ -26,10 +28,9 @@ index_filename = f'{DISCORD_SERVER_ID}_index.faiss'
 config_filename = f'{DISCORD_SERVER_ID}_config.json'
 faiss_filename = 'faiss_document_store.db'
 
-path = '../../solarathon/assets'
 document_store = FAISSDocumentStore.load( 
-    index_path  = f'{path}/{index_filename}', 
-    config_path = f'{path}/{config_filename}'
+    index_path  = f'{assets_path}/{index_filename}', 
+    config_path = f'{assets_path}/{config_filename}'
     )
 
 retriever = EmbeddingRetriever( # https://docs.haystack.deepset.ai/reference/retriever-api

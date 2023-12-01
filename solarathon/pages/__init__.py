@@ -9,7 +9,10 @@ from solarathon.components import input_search
 from solarathon.components import footer
 
 ENV = os.getenv('ENV')
-data_path = '../../' if ENV == 'LOCAL' else ''
+# data_path = '../../' if ENV == 'LOCAL' else ''
+
+data_path = Path(__file__).parent.parent
+FULL_FAQS_PATH = f'{data_path}/assets_backup/full_faq.json'
 
 # in case you want to override the default order of the tabs
 route_order = ["/", 'category','faq']
@@ -18,7 +21,6 @@ openaikey = os.getenv("OPENAI_API_KEY")
 faiss_filename = os.getenv("faiss_filename")
 DISCORD_SERVER_ID = solara.reactive("")
 DISCORD_SERVER_ID = os.getenv("DISCORD_SERVER_ID")
-FULL_FAQS_PATH = f'{data_path}data/full_faq.json'
 
 def import_raw_data():
     # raw_data = Path(__file__).parent.parent

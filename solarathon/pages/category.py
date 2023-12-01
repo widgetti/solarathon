@@ -8,8 +8,9 @@ from solarathon.components import header
 import solara
 
 ENV = os.getenv('ENV')
-data_path = '../../' if ENV == 'LOCAL' else ''
-FULL_FAQS_PATH = f'{data_path}data/full_faq.json'
+# data_path = '../../' if ENV == 'LOCAL' else ''
+data_path = Path(__file__).parent.parent
+FULL_FAQS_PATH = f'{data_path}/assets_backup/full_faq.json'
 
 def import_raw_data():
     # raw_data = Path(__file__).parent.parent

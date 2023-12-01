@@ -1,5 +1,5 @@
 # based on https://docs.cloud.ploomber.io/en/latest/user-guide/github.html
-name: Ingestion Pipeline
+name: Ingestion and Deployment Pipeline
 
 on:
   push:
@@ -41,3 +41,9 @@ jobs:
           python backend/haystack_pipeline/step_2_indexing.py
 
           tree .
+
+      - name: Deploy
+        env:
+          PLOOMBER_CLOUD_KEY: ${{ secrets.PLOOMBER_CLOUD_KEY_S }}
+        run: |
+          (cd ploomber && ploomber-cloud deploy)

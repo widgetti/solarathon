@@ -1,4 +1,4 @@
-#%% []
+
 #!pip install discord.py farm-haystack[faiss] python-dotenv farm-haystack[inference] farm-haystack[preprocessing]
 from dotenv import load_dotenv
 load_dotenv()
@@ -10,7 +10,6 @@ from pathlib import Path
 import json
 from haystack.nodes import  JsonConverter
 
-#%% []
 #* Refactor Discord Messages JSON file
 DISCORD_SERVER_ID = os.getenv('DISCORD_SERVER_ID')
 DISCORD_MESSAGES_PATH_JSON = f'data/{DISCORD_SERVER_ID}_selected_channels_messages.json'
@@ -51,8 +50,8 @@ p.add_node(component=preprocessor, name="PreProcessor", inputs=["FileConverter"]
 
 message_documents = p.run(file_paths = [DISCORD_MESSAGES_PATH_JSON_FORMATTED])
 
-llm = 'gpt-3.5-turbo-16k'
-# llm = 'gpt-4-0613'
+# llm = 'gpt-3.5-turbo-16k'
+llm = 'gpt-4-0613'
 max_length = 4000
 
 # Initalize the node
@@ -72,14 +71,16 @@ prompt_template = PromptTemplate("""
                    
                    Take a deep breath and work on this step by step.
                    Your Goal is to identify the main problems and questions that users have and summarize the content:
-                   - question : Summarize different similar questions within a specific question
-                   - answer : Summarize the response in order to provide a comprensive answer with relative step of resolution if any messages provide the solution. If you don't find the answer to this general question, skip the question
-                   - topic : The main specific topic
-                   - integration: a list of python libraries, code framework, cloud provider that are related to the question
-                   - category : Generate some consistent category related to the question
-
-                    Context: {join(documents)};
+                   - Question : Summarize different similar questions within a specific question.
+                   - Answer : Summarize the response in order to provide a comprensive answer with relative step of resolution if any messages provide the solution. 
+                        If you don't find the answer to this general question, skip the question.
+                   - Topic : The main specific topic.
+                   - Integration: a list of python libraries, code framework, and/or cloud provider that are related to the question.
+                   - Category : Generate some consistent category related to the question.
+                    
                     Query : {query}
+                                 
+                    Context: {join(documents)}
                    """)
 
 prompt_node = PromptNode(
@@ -97,25 +98,26 @@ def run_pipeline(docs):
     pipe = Pipeline()
     pipe.add_node(component=prompt_node, name="prompt_node", inputs=["Query"])
     output = pipe.run(query="""
-                   Remember, your main goal is to summarize the messages to create a Frequently Asked Questions document where each element is a question-answer pair with the extra attributes
-                   Not give me any comment. Note give me any warnig or any modification to the JSON array.
-                   Return the output as a JSON array in the following format:
+                    Remember, your main goal is to summarize the messages to create a Frequently Asked Questions document where each 
+                    element is a question-answer pair with only the requested attributes. Do not include warnings.
+                    Return the output as a JSON array in the following format:
                         [
                             {
-                                "question": "Question 1",
-                                "answer": "Answer 1",
-                                "topic" : "Topic 1" , 
-                                "integrations" : ["integration1", "integration2" ] , 
-                                "category" : "Category A"
+                                "Question": "Question 1",
+                                "Answer": "Answer 1",
+                                "Topic" : "Topic 1" , 
+                                "Integrations" : ["integration1", "integration2" ] , 
+                                "Category" : "Category A"
                             },
                             {
-                                "question": "Question 2",
-                                "answer": "Answer 2",
-                                "topic" : "Topic 1" , 
-                                "integrations" : ["integration1", "integration2" ] , 
-                                "category" : "Category A"
+                                "Question": "Question 2",
+                                "Answer": "Answer 2",
+                                "Topic" : "Topic 1" , 
+                                "Integrations" : ["integration1", "integration2" ] , 
+                                "Category" : "Category A"
                             }
-                        ] """, 
+                        ] 
+                    Do not deviate from the specified JSON array format.""", 
                     documents=docs
                     )
     return pipe,  output

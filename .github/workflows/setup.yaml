@@ -42,6 +42,13 @@ jobs:
 
       #     tree .
 
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ploomber-cloud hatch
+          mkdir -p ploomber/wheels
+          (hatch build && cp dist/*.whl ploomber/wheels)
+
       - name: Deploy
         env:
           PLOOMBER_CLOUD_KEY: ${{ secrets.PLOOMBER_CLOUD_KEY_S }}

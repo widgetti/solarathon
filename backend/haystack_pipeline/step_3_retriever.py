@@ -1,9 +1,7 @@
 from file_functions import *
-#%%
 import os
 from haystack.document_stores import FAISSDocumentStore
 from haystack.nodes import EmbeddingRetriever
-# import pdb ##### REMOVE IN FINAL SCRIPT
 
 ################
 #* THIS SCRIPT IS JUST A REFERENCE, WE COULD USE THE RETRIEVER FOR SEARCH FEATURE IN THE SOLARA FRONTEND
@@ -40,8 +38,6 @@ retriever = EmbeddingRetriever( # https://docs.haystack.deepset.ai/reference/ret
     top_k = 5
 )
 
-# ##### REMOVE IN FINAL SCRIPT
-# pdb.set_trace() 
 user_search_term = 'Jupyter notebook' #### MAKE THIS A UI INPUT
 retrieved_docs = retriever.run_query(user_search_term)
 results = list_retriever_results(retrieved_docs)

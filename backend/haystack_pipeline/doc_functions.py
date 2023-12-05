@@ -14,7 +14,7 @@ def delete_documents(filename, filepath):
         f = tb.tb_frame
         lineno = tb.tb_lineno
         filename = f.f_code.co_filename
-        message = f'{filename} not deleted. An error occurred on line {lineno} in {filename}: {error}.'
+        message = f'{filename} not deleted.  {error} [{lineno} in {filename}].'
         print(message)
     
 def parse_retriever_doc(doc):

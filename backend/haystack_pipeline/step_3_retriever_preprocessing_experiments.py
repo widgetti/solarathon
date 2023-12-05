@@ -23,7 +23,7 @@ llm = 'gpt-3.5-turbo-16k'
 
 split_by_list = ['word', 'sentence']
 split_length_dict = {
-        'word': [200],
+        'word': [20, 40, 60, 200],
         'sentence': [1, 2, 3]
         }
 

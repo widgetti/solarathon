@@ -1,12 +1,9 @@
 import solara
 from pathlib import Path
 import json
-import duckdb
 import os
 from collections import Counter
-from solarathon.components import header
-from solarathon.components import input_search
-from solarathon.components import footer
+from solarathon.components import header, footer, input_search, faq_card
 from pathlib import Path
 
 ENV = os.getenv('ENV')
@@ -24,15 +21,9 @@ DISCORD_SERVER_ID = solara.reactive("")
 DISCORD_SERVER_ID = os.getenv("DISCORD_SERVER_ID")
 
 def import_raw_data():
-    # raw_data = Path(__file__).parent.parent
-    # with open(raw_data / 'assets' / 'full_fe_faqs.json' , 'r' ) as f:
-    #     raw = json.loads(f.read())
-    data = json.loads(open(FULL_FAQS_PATH).read())
+    data       = json.loads(open(FULL_FAQS_PATH).read())
     categories = Counter([f['category'] for f in data])
-    topics = set([f['topic'] for f in data])
-    # print(data[:3])
-    # print(categories)
-    # print(topics)
+    topics     = set([f['topic'] for f in data])
     return data,categories,topics
 
 @solara.component
@@ -77,25 +68,9 @@ def Page():
                                     """, style={"padding":"12px 12px 12px 12px","font-size":"16px"})
 
                     with solara.GridFixed(columns=3):
+                        print(data[2])
                         for faq in data[:9]:
-                            title = faq['question'] if len(faq['question'])<60 else faq['question'][:60] + '...'
-                            answer = faq['answer'] if len(faq['answer'])<350 else faq['answer'][:350] + '...'
-                            with solara.Card(title, classes=['faqcard']):
-                                
-                                with solara.Column(
-                                        style={'width':'90%', 
-                                               'height':'250px',
-                                               'padding':'6px',
-                                               'justify-content': 'space-between'
-                                               }):                               
-                                    with solara.Column(style={'width':'100%'}):                                
-                                        solara.Markdown(answer)
-                                        
-                                    with solara.Column(style={'width':'100%','align-self':'flex-end'}):
-                                        with solara.Row(justify='end'):
-                                            with solara.Link(f"/faq/{faq}"):
-                                            # with solara.Link(f"/faq/{faq['id']}"):
-                                                solara.Button('Read more', classes=['faqbutton'])
+                            faq_card.FaqCard(faq)
         footer.Footer()        
 
 @solara.component
@@ -108,5 +83,4 @@ def Layout(children):
                     children=children, 
                     navigation=False,
                     style={"padding": "0px"}
-                    # style={"background-color": "red"}
                     )

@@ -10,3 +10,9 @@ data/testing_*
 notebooks/2023-11-24 summarization testing.ipynb
 .env
 discord.env
+data
+dist
+*.faiss
+!solarathon/**/*.faiss
+solarathon/assets/**.json
+solarathon/assets/**.db

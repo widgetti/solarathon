@@ -68,11 +68,11 @@ split_length_dict = {
         'sentence': [1, 2, 3]
         }
 
-# Get every combination of split_by_list and split_length_list:
-# split_by_combinations = [('word', split_length) for split_length in split_length_dict['word']] + \
-#     [('sentence', split_length) for split_length in split_length_dict['sentence']]
+# # Get every combination of split_by_list and split_length_list:
+split_by_combinations = [('word', split_length) for split_length in split_length_dict['word']] + \
+    [('sentence', split_length) for split_length in split_length_dict['sentence']]
 # split_by_combinations = [('sentence', split_length) for split_length in split_length_dict['sentence']]
-split_by_combinations = [('word', split_length) for split_length in split_length_dict['word']] 
+# split_by_combinations = [('word', split_length) for split_length in split_length_dict['word']] 
 
 for split_by, split_length in split_by_combinations:
     split_description = f'split_by_{split_length}_{split_by}'

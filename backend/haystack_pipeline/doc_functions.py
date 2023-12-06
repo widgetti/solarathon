@@ -55,7 +55,8 @@ def list_retriever_results(retriever_results, show_score=False):
         List of dictionaries containing the question and answer sets.
     """
     results = []
-    for doc in retriever_results[0]['documents']:
+    for doc in retriever_results:
+    # for doc in retriever_results[0]['documents']:
         if show_score:
             results.append({
                 **parse_retriever_doc(doc), 

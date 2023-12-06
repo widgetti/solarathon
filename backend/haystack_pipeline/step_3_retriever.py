@@ -1,3 +1,4 @@
+#!python step_3_retriever.py
 from doc_functions import *
 import os
 from haystack.document_stores import FAISSDocumentStore
@@ -40,13 +41,10 @@ retriever = EmbeddingRetriever( # https://docs.haystack.deepset.ai/reference/ret
 user_search_term = 'Jupyter notebook' #### MAKE THIS A UI INPUT
 ################
 
-
 show_score = False #### Whether or not to show the confidence score of the model that retrieved the results. 
     # https://docs.haystack.deepset.ai/docs/documents_answers_labels#document
-    # When testing with a few different `user_search_term` values, the score was always around 0.50 with a range of < 0.001, 
-    # even when top_k = 10. 
-    # Tested search terms: ['Solara', 'orange juice', 'Silvia', 'dfaadfadfadfadfadfadfdaf']
-retrieved_docs = retriever.run_query(user_search_term)
+show_score = True
+retrieved_docs = retriever.retrieve(user_search_term)
 results = list_retriever_results(retrieved_docs, show_score=show_score) ### THIS WILL BE DISPLAYED IN THE FRONTEND
 
 

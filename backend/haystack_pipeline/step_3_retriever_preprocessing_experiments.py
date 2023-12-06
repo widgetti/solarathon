@@ -63,10 +63,7 @@ for split_by, split_length in split_by_combinations:
 
         show_score = True #### Whether or not to show the confidence score of the model that retrieved the results. 
             # https://docs.haystack.deepset.ai/docs/documents_answers_labels#document
-            # When testing with a few different `user_search_term` values, the score was always around 0.50 with a range of < 0.001, 
-            # even when top_k = 10. 
-            # Tested search terms: ['Solara', 'orange juice', 'Silvia', 'dfaadfadfadfadfadfadfdaf']
-        retrieved_docs = retriever.run_query(user_search_term)
+        retrieved_docs = retriever.retrieve(user_search_term)
         results_dict[split_description] = list_retriever_results(retrieved_docs, show_score=show_score) ### THIS WILL BE DISPLAYED IN THE FRONTEND
     except Exception as error:
         exc_type, exc_obj, tb = sys.exc_info()

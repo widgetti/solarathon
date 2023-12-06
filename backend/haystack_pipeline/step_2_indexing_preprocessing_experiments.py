@@ -1,4 +1,5 @@
 #!pip install discord.py farm-haystack[faiss] python-dotenv farm-haystack[inference] farm-haystack[preprocessing]
+#!python step_2_indexing_preprocessing_experiments.py
 from doc_functions import *
 import os
 if os.getenv('run_locally') != '1':
@@ -87,7 +88,8 @@ for split_by, split_length in split_by_combinations:
 
     document_store = FAISSDocumentStore( # https://docs.haystack.deepset.ai/reference/document-store-api#faissdocumentstore
         sql_url=f"sqlite:///{assets_path}{faiss_filename}",
-        faiss_index_factory_str="Flat"
+        faiss_index_factory_str="Flat",
+        similarity = 'cosine'
         )
     print(f'FAISSDocumentStore instantiated.')
     preprocessor = PreProcessor( # https://docs.haystack.deepset.ai/docs/preprocessor

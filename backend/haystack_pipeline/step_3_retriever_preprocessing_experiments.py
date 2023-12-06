@@ -1,3 +1,4 @@
+#!python step_3_retriever_preprocessing_experiments.py
 from doc_functions import *
 import os
 from haystack.document_stores import FAISSDocumentStore
@@ -24,7 +25,7 @@ llm = 'gpt-3.5-turbo-16k'
 split_by_list = ['word', 'sentence']
 split_length_dict = {
         'word': [20, 40, 60, 200],
-        'sentence': [1, 2, 3]
+        'sentence': [1, 2, 3, 4]
         }
 
 # Get every combination of split_by_list and split_length_list:

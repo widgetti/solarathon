@@ -155,7 +155,8 @@ for jpath in Path('data').glob('faq_*.json'):
         print(f'SKIPPED - JSON Parsing Failed from {jpath} - {e}')
         
 
-print('total discord message : ', len(full_json_docs))
+print('total discord messages : ', len(discord_messages))
+print('total FAQs generated : ', len(full_json_docs))
 
 
 for i,_ in enumerate(full_json_docs):

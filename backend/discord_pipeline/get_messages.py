@@ -10,6 +10,7 @@ from pathlib import Path
 DISCORD_SERVER_ID = int(os.getenv('DISCORD_SERVER_ID'))
 DISCORD_CHANNEL_ID = int(os.getenv('DISCORD_CHANNEL_ID'))
 BOT_TOKEN         = os.getenv('BOT_TOKEN')
+DISCORD_MESSAGES         = os.getenv('DISCORD_MESSAGES')
 
 tmp_data_path = Path('data')
 tmp_data_path.mkdir(parents=True, exist_ok=True)
@@ -53,7 +54,7 @@ class FAQCreatorBotClient(discord.Client):
             try:
                 #TODO uncomment for PROD
                 # messages = [message async for message in c.history(limit = 100_000)] 
-                messages = [message async for message in c.history(limit = 500)]
+                messages = [message async for message in c.history(limit = DISCORD_MESSAGES)]
             except:
                 print(f'error with channel : {c.name}')
                 messages = []

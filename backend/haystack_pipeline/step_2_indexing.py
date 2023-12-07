@@ -1,4 +1,5 @@
 #!pip install discord.py farm-haystack[faiss] python-dotenv farm-haystack[inference] farm-haystack[preprocessing]
+#!python step_2_indexing.py
 from doc_functions import *
 import os
 if os.getenv('run_locally') != '1':
@@ -17,8 +18,8 @@ DISCORD_SERVER_ID = os.getenv('DISCORD_SERVER_ID')
 data_path = 'data/'
 assets_path = 'solarathon/assets/'
 if os.getenv('run_locally') == '1':
-    data_path = f'../../{data_path}'
-    assets_path = f'../../{assets_path}'
+    data_path = f'../..{data_path}'
+    assets_path = f'../..{assets_path}'
 
 
 DISCORD_MESSAGES_PATH_JSON = f'{data_path}{DISCORD_SERVER_ID}_selected_channels_messages.json'
@@ -71,8 +72,10 @@ delete_documents(faiss_filename, assets_path)
 
 document_store = FAISSDocumentStore( # https://docs.haystack.deepset.ai/reference/document-store-api#faissdocumentstore
     sql_url=f"sqlite:///{assets_path}{faiss_filename}",
-    faiss_index_factory_str="Flat"
+    faiss_index_factory_str="Flat",
+    similarity = 'cosine'
     )
+print(f'FAISSDocumentStore instantiated.')
 preprocessor = PreProcessor( # https://docs.haystack.deepset.ai/docs/preprocessor
     clean_empty_lines=True,
     clean_whitespace=True,
@@ -84,6 +87,7 @@ preprocessor = PreProcessor( # https://docs.haystack.deepset.ai/docs/preprocesso
     split_overlap=0,
   	max_chars_check = 600000
 )
+print(f'PreProcessor instantiated.')
 
 retriever = EmbeddingRetriever( # https://docs.haystack.deepset.ai/reference/retriever-api
     document_store=document_store,
@@ -91,6 +95,7 @@ retriever = EmbeddingRetriever( # https://docs.haystack.deepset.ai/reference/ret
     model_format="sentence_transformers",
     top_k = 10
 )
+print(f'Retriever instantiated.')
 
 file_converter = JsonConverter() # https://docs.haystack.deepset.ai/docs/file_converters
 indexing_pipeline = Pipeline()
@@ -99,6 +104,9 @@ indexing_pipeline.add_node(component=preprocessor, name="PreProcessor", inputs=[
 indexing_pipeline.add_node(component=retriever, name="Retriever", inputs=["PreProcessor"])
 indexing_pipeline.add_node(component=document_store, name="DocumentStore", inputs=["Retriever"])
 indexing_pipeline.run(file_paths=[FAQS_PATH_JSON_FORMATTED])
+print(f'Pipeline ran.')
+document_store.update_embeddings(retriever)
+print(f'Embeddings updated.')
 
 document_store.save(
     index_path  = f'{assets_path}{index_filename}', 

@@ -4,6 +4,7 @@ import json
 import os
 from collections import Counter
 from solarathon.components import header, footer, input_search, faq_card
+from solarathon.ui_utils import cat2path
 from pathlib import Path
 
 ENV = os.getenv('ENV')
@@ -56,8 +57,9 @@ def Page():
                         for category in list(categories.keys())[:11]:
                             with solara.Card(category):
                                                                     
-                                    with solara.Link(f"/category/{category.replace(' ','-')}"):
+                                    with solara.Link(f"/category/{cat2path(category)}"):
                                         solara.Text('Read more')
+                                        
                         with solara.Card('All'):                
                                 with solara.Link(f"/category"):
                                     solara.Text('See all categories')   
@@ -68,7 +70,7 @@ def Page():
                                     """, style={"padding":"12px 12px 12px 12px","font-size":"16px"})
 
                     with solara.GridFixed(columns=3):
-                        print(data[2])
+                        # print(data[2])
                         for faq in data[:9]:
                             faq_card.FaqCard(faq)
         footer.Footer()        

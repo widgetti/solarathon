@@ -7,6 +7,7 @@ from solarathon.components import header
 from pathlib import Path
 import solara
 from solarathon.components import input_search
+from solarathon.ui_utils import cat2path
 
 ENV = os.getenv('ENV')
 # data_path = '../../' if ENV == 'LOCAL' else ''
@@ -56,7 +57,6 @@ def Page(cat_name: Optional[str] = None, page: int = 0, page_size=100):
                     with solara.Column():
                         solara.Text('Tranding Categories', style={"padding":"12px 12px 12px 12px","font-size":"24px"})
 
-
                         with solara.GridFixed(columns=3):
                             for category in list(categories.keys()):
                                 with solara.Card(category):
@@ -67,7 +67,7 @@ def Page(cat_name: Optional[str] = None, page: int = 0, page_size=100):
                                     with solara.Link(f"/category"):
                                         solara.Text('See all categories')
         else:
-            cat = cat_name.replace('-', ' ')
+            cat = cat2path(cat_name)
             cat_faqs = [faq for faq in data if faq['category']==cat]
             with solara.Column(style={'height':'1000px'}):
                 with solara.GridFixed(columns=3):

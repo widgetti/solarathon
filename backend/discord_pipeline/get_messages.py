@@ -10,7 +10,7 @@ from pathlib import Path
 DISCORD_SERVER_ID = int(os.getenv('DISCORD_SERVER_ID'))
 DISCORD_CHANNEL_ID = int(os.getenv('DISCORD_CHANNEL_ID'))
 BOT_TOKEN         = os.getenv('BOT_TOKEN')
-DISCORD_MESSAGES         = os.getenv('DISCORD_MESSAGES')
+DEFAULT_DISCORD_MESSAGES         = int(os.getenv('DEFAULT_DISCORD_MESSAGES'))
 
 tmp_data_path = Path('data')
 tmp_data_path.mkdir(parents=True, exist_ok=True)
@@ -27,9 +27,10 @@ class FAQCreatorBotClient(discord.Client):
         text_channels = await self.find_text_channels()
         print(text_channels)
         messages = await self.fetch_messages()
-        print(messages)
-        await self.close()
+        # print(messages)
         print('process complete')
+        print('Forcing Discord Bot closing . . .')
+        await self.close()
 
 
     async def find_text_channels(self):
@@ -54,9 +55,9 @@ class FAQCreatorBotClient(discord.Client):
             try:
                 #TODO uncomment for PROD
                 # messages = [message async for message in c.history(limit = 100_000)] 
-                messages = [message async for message in c.history(limit = DISCORD_MESSAGES)]
-            except:
-                print(f'error with channel : {c.name}')
+                messages = [message async for message in c.history(limit = DEFAULT_DISCORD_MESSAGES)]
+            except Exception as e:
+                print(f'error with channel : {c.name}, {e}')
                 messages = []
             
             print(f'Founded {len(messages)} Messages in the current channel')

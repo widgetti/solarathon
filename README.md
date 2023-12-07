@@ -7,7 +7,7 @@
 - Go in the "OAuth2" section --> URL Generator
 - Check the "bot" checkbox
 ![plot](./discordbot.png)
-- assign the permission "Read MEssage History"
+- assign the permission "Read Message History"
 - copy the generated URL:
 	- https://discord.com/api/oauth2/authorize?client_id=XXXXX&permissions=65536&scope=bot
 - install the Bot on your Discord Server

@@ -1,0 +1,29 @@
+
+.faqcard {
+   /* Add shadows to create the "faqcard" effect */
+   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2) !important;
+   transition: 0.3s !important;
+   padding: 12px !important;
+   border-radius: 16px !important; 
+   border-color: 'black' !important; 
+   border-style: solid !important;
+
+ }
+ 
+ /* On mouse-over, add a deeper shadow */
+ .faqcard:hover {
+   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2) !important;
+ }
+ 
+ /* Add some padding inside the faqcard container */
+ .faqcontainer {
+   padding: 2px 16px !important;
+   height: 180px;
+ }
+
+ .faqbutton {
+  /* Add shadows to create the "faqcard" effect */
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  height: 12px;
+}

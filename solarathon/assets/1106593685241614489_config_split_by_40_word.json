@@ -1,1 +1,0 @@
-{"sql_url": "sqlite:///../../solarathon/assets/faiss_document_store_split_by_40_word.db", "faiss_index_factory_str": "Flat", "similarity": "cosine"}

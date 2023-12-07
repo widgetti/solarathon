@@ -20,7 +20,14 @@ This project was created as part of the 2023 Solarathon.
 - save the token
 - Go in the "OAuth2" section --> URL Generator
 - Check the "bot" checkbox
-![plot](./discordbot.png)
+
+	<details>
+	<summary>Click for image </summary>
+
+	![plot](./discordbot.png)
+
+	</details>
+
 - assign the permission "Read Message History"
 - copy the generated URL:
 	- https://discord.com/api/oauth2/authorize?client_id=XXXXX&permissions=65536&scope=bot

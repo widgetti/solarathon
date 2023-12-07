@@ -1,20 +1,39 @@
 
 # Setup the Discord Bot
 
+- navigate to https://discord.com/developers/applications
+- create a new bot
+- save the token
+- Go in the "OAuth2" section --> URL Generator
+- Check the "bot" checkbox
+![plot](./discordbot.png)
+- assign the permission "Read MEssage History"
+- copy the generated URL:
+	- https://discord.com/api/oauth2/authorize?client_id=XXXXX&permissions=65536&scope=bot
+- install the Bot on your Discord Server
+
 # Run locally
 
-## simulate the github workflow steps locally:
+## Setup Env Variables
+
+```
+DISCORD_SERVER_ID=xxxxx
+DISCORD_CHANNEL_ID=xxxxx
+OPENAI_API_KEY=xxxxx
+BOT_TOKEN=xxxxx
 ```
 
+## Simulate the github workflow steps locally:
+```
 $ pip install -r backend/discord_pipeline/requirements.txt
 $ python backend/discord_pipeline/get_messages.py
 
 $ pip install -r backend/haystack_pipeline/requirements.txt
 $ python backend/haystack_pipeline/step_1_generate_faqs.py
 $ python backend/haystack_pipeline/step_2_indexing.py
-
 ```
-# Install and Run the Solara Web App
+
+## Install and Run the Solara Web App
 ```
 pip install -e .
 
@@ -22,6 +41,15 @@ solara run solarathon.pages
 ```
 
 # Deploy via Github Actions
+
+## Setup Env Variables in Github Secrets
+
+```
+DISCORD_SERVER_ID=xxxxx
+DISCORD_CHANNEL_ID=xxxxx
+OPENAI_API_KEY=xxxxx
+BOT_TOKEN=xxxxx
+```
 
 [Get your Ploomber API key](https://docs.cloud.ploomber.io/en/latest/quickstart/apikey.html) and set it as `PLOOMBER_CLOUD_KEY` in GitHub (under Settings->Secrets and Variables->Actions, and click "New repository secret")
 

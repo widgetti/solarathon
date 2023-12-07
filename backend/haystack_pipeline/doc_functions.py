@@ -13,8 +13,8 @@ def delete_documents(filename, filepath):
         exc_type, exc_obj, tb = sys.exc_info()
         f = tb.tb_frame
         lineno = tb.tb_lineno
-        filename = f.f_code.co_filename
-        message = f'{filename} not deleted.  {error} [{lineno} in {filename}].'
+        file = f.f_code.co_filename
+        message = f'{filename} not deleted. {error} [{lineno} in {file}].'
         print(message)
     
 def parse_retriever_doc(doc):

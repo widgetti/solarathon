@@ -39,7 +39,7 @@ def Page():
                     #** Few FAQs Block
                     solara.Markdown("""
                                     Look for specific questions or problems in the Help Center above.\n
-                                    Alternatively, explore these tips on how to troubleshoot ad issues and optimize your campaigns
+                                    Alternatively, explore these tips on how to troubleshoot issues and optimize your campaigns
                                     """, style={"padding":"12px 12px 12px 12px","font-size":"16px"})
                     with solara.GridFixed(columns=3, row_gap = '24px'):
                         # print(data[2])

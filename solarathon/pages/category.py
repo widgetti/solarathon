@@ -24,7 +24,7 @@ def Page(cat_name: Optional[str] = None, page: int = 0, page_size=100):
                 with solara.Row(justify='start',style={ 'width':'900px'}):
 
                     with solara.Column():
-                        solara.Text('Tranding Categories', style={"padding":"12px 12px 12px 12px","font-size":"24px"})
+                        solara.Text('Trending Categories', style={"padding":"12px 12px 12px 12px","font-size":"24px"})
 
                         with solara.GridFixed(columns=3):
                             for category in list(categories.keys()):

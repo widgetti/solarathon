@@ -17,6 +17,7 @@
 ## Setup Env Variables
 
 ```
+HAYSTACK_REMOTE_API_TIMEOUT_SEC=300
 DISCORD_SERVER_ID=xxxxx
 DISCORD_CHANNEL_ID=xxxxx
 OPENAI_API_KEY=xxxxx
@@ -45,10 +46,12 @@ solara run solarathon.pages
 ## Setup Env Variables in Github Secrets
 
 ```
+HAYSTACK_REMOTE_API_TIMEOUT_SEC=300
 DISCORD_SERVER_ID=xxxxx
 DISCORD_CHANNEL_ID=xxxxx
 OPENAI_API_KEY=xxxxx
 BOT_TOKEN=xxxxx
+PLOOMBER_CLOUD_KEY=XXXXX
 ```
 
 [Get your Ploomber API key](https://docs.cloud.ploomber.io/en/latest/quickstart/apikey.html) and set it as `PLOOMBER_CLOUD_KEY` in GitHub (under Settings->Secrets and Variables->Actions, and click "New repository secret")
@@ -73,12 +76,6 @@ $ git push origin master:ploomber_dev
 $ git push origin master:ploomber_dev
 # add --force if needed
 ```
-
-# Other resources
-
- * [Wanderlust app](https://github.com/widgetti/wanderlust)
- * [Solara website](https://github.com/widgetti/solara/tree/master/solara/website)
- * [Solara examples](https://solara.dev/examples)
 
 # Deploy manually
 
